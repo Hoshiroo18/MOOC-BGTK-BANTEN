@@ -1,0 +1,772 @@
+/* =========================================================
+   KEGIATAN PAGE - MOOC BGTK BANTEN
+   Path: public/css/kegiatan.css
+========================================================= */
+
+.admin-kegiatan-page {
+  padding: 0 0 72px;
+  background: linear-gradient(180deg, #ffffff 0%, var(--sky-50) 100%);
+}
+
+/* =========================================================
+   KEGIATAN HERO - BADUY BACKGROUND
+========================================================= */
+.kegiatan-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 64px 0 88px;
+  background-color: #074a9a;
+  background-image:
+    linear-gradient(
+      135deg,
+      rgba(12, 74, 160, 0.78) 0%,
+      rgba(13, 86, 182, 0.72) 48%,
+      rgba(31, 111, 211, 0.68) 100%
+    ),
+    url("/images/baduy.jpg");
+  background-repeat: no-repeat, repeat;
+  background-size: cover, 230px auto;
+  background-position: center, center;
+}
+
+/* hapus motif bulet-bulet / dekorasi lama */
+.kegiatan-hero::before,
+.kegiatan-hero::after {
+  display: none !important;
+  content: none !important;
+}
+
+.kegiatan-hero-inner {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: 1fr 0.85fr;
+  gap: 30px;
+  align-items: center;
+}
+
+.kegiatan-hero-copy {
+  position: relative;
+  z-index: 4;
+}
+
+.eyebrow.light {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 8px 15px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  color: white;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.4px;
+  backdrop-filter: blur(10px);
+}
+
+.kegiatan-hero-copy h1 {
+  max-width: 680px;
+  margin: 16px 0 14px;
+  color: white;
+  font-size: clamp(36px, 4.2vw, 58px);
+  line-height: 1;
+  letter-spacing: -1.5px;
+}
+
+.kegiatan-hero-copy p {
+  max-width: 690px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 15.5px;
+  line-height: 1.75;
+}
+
+.kegiatan-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.hero-main-btn,
+.hero-outline-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 22px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 900;
+  text-decoration: none;
+  transition: 0.22s ease;
+}
+
+.hero-main-btn {
+  background: white;
+  color: var(--blue-900);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.14);
+}
+
+.hero-main-btn:hover {
+  transform: translateY(-2px);
+}
+
+.hero-outline-btn {
+  color: white;
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  backdrop-filter: blur(10px);
+}
+
+.hero-outline-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* =========================================================
+   HERO STATS
+========================================================= */
+.kegiatan-hero-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 26px;
+  max-width: 760px;
+}
+
+.kegiatan-hero-stats div {
+  padding: 14px;
+  border-radius: 17px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(12px);
+}
+
+.kegiatan-hero-stats strong {
+  display: block;
+  color: white;
+  font-size: 24px;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.kegiatan-hero-stats span {
+  display: block;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 11.5px;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+/* =========================================================
+   HERO PANEL KANAN
+========================================================= */
+.kegiatan-hero-panel {
+  position: relative;
+  min-height: 330px;
+}
+
+.hero-panel-glow {
+  position: absolute;
+  inset: 50px 30px 40px;
+  border-radius: 999px;
+  background: rgba(255, 214, 94, 0.20);
+  filter: blur(72px);
+}
+
+.hero-panel-card {
+  position: relative;
+  z-index: 2;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.56);
+  box-shadow:
+    0 32px 80px rgba(0, 0, 0, 0.24),
+    0 14px 34px rgba(10, 47, 107, 0.16);
+  backdrop-filter: blur(18px);
+}
+
+.main-preview-card {
+  max-width: 380px;
+  margin-left: auto;
+  padding: 22px;
+}
+
+.preview-card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.preview-card-top span {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.preview-card-top h3 {
+  margin: 0;
+  color: var(--blue-900);
+  font-size: 24px;
+  line-height: 1.1;
+}
+
+.preview-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  background: radial-gradient(circle at top left, #ffffff, #dceaff);
+  color: var(--blue-800);
+  font-size: 21px;
+  font-weight: 900;
+  box-shadow: 0 14px 30px rgba(13, 86, 182, 0.18);
+}
+
+.preview-progress {
+  padding: 15px;
+  border-radius: 18px;
+  background: var(--sky-50);
+  border: 1px solid var(--line);
+  margin-bottom: 14px;
+}
+
+.preview-progress div:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.preview-progress span {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.preview-progress strong {
+  color: var(--blue-900);
+  font-size: 14px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 10px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #dce8f8;
+}
+
+.progress-bar span {
+  display: block;
+  width: 72%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--blue-800), var(--blue-700));
+}
+
+.preview-mini-list {
+  display: grid;
+  gap: 10px;
+}
+
+.preview-mini-list div {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 11px 13px;
+  border-radius: 15px;
+  background: white;
+  border: 1px solid var(--line);
+}
+
+.preview-mini-list p {
+  margin: 0;
+  color: var(--blue-900);
+  font-size: 13.5px;
+  font-weight: 800;
+}
+
+.mini-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  flex: 0 0 auto;
+}
+
+.mini-dot.webinar {
+  background: #0d56b6;
+}
+
+.mini-dot.pelatihan {
+  background: #f5a524;
+}
+
+.mini-dot.konsultasi {
+  background: #16a34a;
+}
+
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
+.kegiatan-main-container {
+  position: relative;
+  z-index: 4;
+  margin-top: 40px;
+}
+
+.kegiatan-grid {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.kegiatan-form-card,
+.kegiatan-data-card {
+  scroll-margin-top: 100px;
+}
+
+/* =========================================================
+   CARD GLOBAL
+========================================================= */
+.admin-card {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 26px;
+  box-shadow:
+    0 26px 70px rgba(10, 47, 107, 0.20),
+    0 10px 24px rgba(10, 47, 107, 0.10);
+}
+
+.admin-card h2 {
+  margin-top: 0;
+  color: var(--blue-900);
+}
+
+.section-heading.compact {
+  margin-bottom: 20px;
+}
+
+.section-heading.compact h2 {
+  margin: 0 0 6px;
+  font-size: 24px;
+  color: var(--blue-900);
+}
+
+.section-heading.compact p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.8;
+  font-size: 14px;
+}
+
+.card-kicker {
+  display: inline-flex;
+  margin-bottom: 12px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: #e7f0ff;
+  color: var(--blue-800);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+/* =========================================================
+   FORM KEGIATAN
+========================================================= */
+.admin-form {
+  display: grid;
+  gap: 16px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.form-group {
+  display: grid;
+  gap: 8px;
+}
+
+.form-group label {
+  color: var(--blue-900);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 13px 15px;
+  font-size: 14px;
+  color: var(--ink);
+  outline: none;
+  background: white;
+  font-family: inherit;
+}
+
+.form-group input,
+.form-group select {
+  min-height: 50px;
+}
+
+.form-group textarea {
+  resize: vertical;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--blue-700);
+  box-shadow: 0 0 0 4px rgba(13, 86, 182, 0.1);
+}
+
+.form-group input[readonly] {
+  background: #f7f9fd;
+  color: var(--muted);
+}
+
+.form-help {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.admin-submit-btn {
+  width: 100%;
+  height: 52px;
+  border: none;
+  border-radius: 999px;
+  background: var(--blue-800);
+  color: white;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 14px 30px rgba(10, 63, 138, 0.22);
+  transition: 0.2s ease;
+}
+
+.admin-submit-btn:hover {
+  background: var(--blue-900);
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   ALERT
+========================================================= */
+.alert-success,
+.alert-error {
+  margin: 0 0 18px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  font-weight: 700;
+}
+
+.alert-success {
+  background: #e9fff1;
+  color: #146c2e;
+  border: 1px solid #bff0ce;
+}
+
+.alert-error {
+  background: #fff0f0;
+  color: #b42318;
+  border: 1px solid #ffd0d0;
+}
+
+/* =========================================================
+   DATA KEGIATAN
+========================================================= */
+.kegiatan-list {
+  display: grid;
+  gap: 16px;
+}
+
+.kegiatan-item {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 18px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: #fff;
+  align-items: start;
+  box-shadow: 0 12px 32px rgba(10, 47, 107, 0.10);
+  transition: 0.2s ease;
+}
+
+.kegiatan-item:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 24px 60px rgba(10, 47, 107, 0.20),
+    0 10px 22px rgba(10, 47, 107, 0.10);
+}
+
+.kegiatan-flayer-wrap {
+  width: 180px;
+  aspect-ratio: 4 / 5;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--sky-50);
+  border: 1px solid var(--line);
+}
+
+.kegiatan-flayer {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.kegiatan-flayer-empty {
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at top right, rgba(13, 86, 182, 0.15), transparent 36%),
+    linear-gradient(135deg, #eef5ff, #dceaff);
+}
+
+.kegiatan-flayer-empty span {
+  color: var(--blue-800);
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.kegiatan-item-body h3 {
+  margin: 10px 0 8px;
+  color: var(--blue-900);
+  font-size: 18px;
+  line-height: 1.35;
+}
+
+.kegiatan-item-body p {
+  margin: 0 0 12px;
+  color: var(--muted);
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.kegiatan-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.kegiatan-badges span {
+  display: inline-flex;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #e7f0ff;
+  color: var(--blue-800);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.kegiatan-meta {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.kegiatan-meta small {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.kegiatan-link-box {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+}
+
+.kegiatan-link-box input {
+  width: 100%;
+  min-height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0 12px;
+  font-size: 12px;
+  color: var(--muted);
+  background: var(--sky-50);
+}
+
+.kegiatan-link-box a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 12px;
+  background: var(--blue-800);
+  color: white;
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.kegiatan-link-box a:hover {
+  background: var(--blue-900);
+}
+
+.empty-state {
+  padding: 28px;
+  text-align: center;
+  color: var(--muted);
+  border: 1px dashed var(--line);
+  border-radius: 18px;
+  background: var(--sky-50);
+}
+
+.delete-kegiatan-form {
+  margin-top: 10px;
+}
+
+.delete-kegiatan-btn {
+  width: 100%;
+  min-height: 40px;
+  border: none;
+  border-radius: 12px;
+  background: #fff0f0;
+  color: #b42318;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  font-family: inherit;
+  border: 1px solid #ffd0d0;
+  transition: 0.2s ease;
+}
+
+.delete-kegiatan-btn:hover {
+  background: #b42318;
+  color: white;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media (max-width: 1100px) {
+  .kegiatan-hero {
+    padding: 48px 0 70px;
+  }
+
+  .kegiatan-hero-inner,
+  .kegiatan-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kegiatan-hero-panel {
+    min-height: 310px;
+  }
+
+  .main-preview-card {
+    max-width: 420px;
+    margin-left: 0;
+  }
+
+  .kegiatan-item {
+    grid-template-columns: 180px 1fr;
+  }
+
+  .kegiatan-flayer-wrap {
+    width: 180px;
+  }
+}
+
+@media (max-width: 768px) {
+  .kegiatan-hero {
+    padding: 38px 0 64px;
+    background-size: cover, 190px auto;
+  }
+
+  .kegiatan-hero-copy h1 {
+    font-size: clamp(32px, 9vw, 48px);
+    line-height: 1.03;
+    letter-spacing: -1.2px;
+  }
+
+  .kegiatan-hero-copy p {
+    font-size: 14.5px;
+    line-height: 1.7;
+  }
+
+  .kegiatan-hero-actions {
+    margin-top: 20px;
+  }
+
+  .kegiatan-hero-stats {
+    grid-template-columns: repeat(2, 1fr);
+    margin-top: 22px;
+  }
+
+  .kegiatan-hero-panel {
+    min-height: auto;
+  }
+
+  .main-preview-card {
+    max-width: 100%;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .form-row,
+  .kegiatan-link-box,
+  .kegiatan-hero-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .kegiatan-item {
+    grid-template-columns: 1fr;
+  }
+
+  .kegiatan-flayer-wrap {
+    width: 100%;
+    max-width: 320px;
+  }
+}
+
+@media (max-width: 560px) {
+  .kegiatan-hero {
+    padding: 32px 0 56px;
+    background-size: cover, 165px auto;
+  }
+
+  .kegiatan-hero-actions {
+    flex-direction: column;
+  }
+
+  .hero-main-btn,
+  .hero-outline-btn {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .admin-card {
+    padding: 20px;
+  }
+
+  .kegiatan-main-container {
+    margin-top: 28px;
+  }
+
+  .preview-card-top h3 {
+    font-size: 23px;
+  }
+}
