@@ -3,6 +3,7 @@
 @section('title', 'Kegiatan - MOOC BGTK Banten')
 
 @push('styles')
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <link rel="stylesheet" href="{{ asset('css/kegiatan.css') }}">
 @endpush
 
@@ -19,7 +20,7 @@
 
 <section class="admin-kegiatan-page">
 
-  {{-- HERO ATAS --}}
+  {{-- HERO --}}
   <div class="kegiatan-hero">
     <div class="container kegiatan-hero-inner">
 
@@ -68,7 +69,6 @@
       </div>
 
       <div class="kegiatan-hero-panel">
-
         <div class="hero-panel-card main-preview-card">
           <div class="preview-card-top">
             <div>
@@ -114,6 +114,7 @@
     </div>
   </div>
 
+  {{-- MAIN --}}
   <div class="container kegiatan-main-container">
 
     @if(session('success'))
@@ -130,6 +131,7 @@
 
     <div class="kegiatan-grid">
 
+      {{-- FORM KEGIATAN --}}
       <div class="admin-card kegiatan-form-card" id="form-kegiatan">
         <div class="section-heading compact">
           <div>
@@ -139,33 +141,69 @@
           </div>
         </div>
 
-        <form action="{{ route('admin.kegiatan.store') }}" method="POST" enctype="multipart/form-data" class="admin-form">
+        <form
+          action="{{ route('admin.kegiatan.store') }}"
+          method="POST"
+          enctype="multipart/form-data"
+          class="admin-form js-store-form"
+        >
           @csrf
 
           <div class="form-row">
             <div class="form-group">
-              <label for="jenis_kegiatan">Jenis Kegiatan</label>
+              <label for="jenis_kegiatan">
+                Jenis Kegiatan <span class="required-mark">*</span>
+              </label>
+
               <select id="jenis_kegiatan" name="jenis_kegiatan" required>
-                <option value="">Pilih jenis kegiatan</option>
-                <option value="webinar" {{ old('jenis_kegiatan') == 'webinar' ? 'selected' : '' }}>Webinar</option>
-                <option value="pelatihan" {{ old('jenis_kegiatan') == 'pelatihan' ? 'selected' : '' }}>Pelatihan</option>
-                <option value="konsultasi" {{ old('jenis_kegiatan') == 'konsultasi' ? 'selected' : '' }}>Konsultasi</option>
+                <option value="" {{ old('jenis_kegiatan') ? '' : 'selected' }}>
+                  Pilih jenis kegiatan
+                </option>
+
+                <option value="webinar" {{ old('jenis_kegiatan') == 'webinar' ? 'selected' : '' }}>
+                  Webinar
+                </option>
+
+                <option value="pelatihan" {{ old('jenis_kegiatan') == 'pelatihan' ? 'selected' : '' }}>
+                  Pelatihan
+                </option>
+
+                <option value="konsultasi" {{ old('jenis_kegiatan') == 'konsultasi' ? 'selected' : '' }}>
+                  Konsultasi
+                </option>
               </select>
             </div>
 
             <div class="form-group">
-              <label for="moda">Moda</label>
+              <label for="moda">
+                Moda <span class="required-mark">*</span>
+              </label>
+
               <select id="moda" name="moda" required>
-                <option value="">Pilih moda</option>
-                <option value="luring" {{ old('moda') == 'luring' ? 'selected' : '' }}>Luring</option>
-                <option value="daring" {{ old('moda') == 'daring' ? 'selected' : '' }}>Daring</option>
-                <option value="hybrid" {{ old('moda') == 'hybrid' ? 'selected' : '' }}>Hybrid</option>
+                <option value="" {{ old('moda') ? '' : 'selected' }}>
+                  Pilih moda
+                </option>
+
+                <option value="luring" {{ old('moda') == 'luring' ? 'selected' : '' }}>
+                  Luring
+                </option>
+
+                <option value="daring" {{ old('moda') == 'daring' ? 'selected' : '' }}>
+                  Daring
+                </option>
+
+                <option value="hybrid" {{ old('moda') == 'hybrid' ? 'selected' : '' }}>
+                  Hybrid
+                </option>
               </select>
             </div>
           </div>
 
           <div class="form-group">
-            <label for="nama_kegiatan">Nama Kegiatan</label>
+            <label for="nama_kegiatan">
+              Nama Kegiatan <span class="required-mark">*</span>
+            </label>
+
             <input
               type="text"
               id="nama_kegiatan"
@@ -178,18 +216,25 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label for="fasil">Fasil</label>
+              <label for="fasil">
+                Fasil <span class="required-mark">*</span>
+              </label>
+
               <input
                 type="text"
                 id="fasil"
                 name="fasil"
                 value="{{ old('fasil') }}"
                 placeholder="Contoh: Dr. Yusup Ardabili"
+                required
               >
             </div>
 
             <div class="form-group">
-              <label for="kuota">Kuota</label>
+              <label for="kuota">
+                Kuota <span class="required-mark">*</span>
+              </label>
+
               <input
                 type="number"
                 id="kuota"
@@ -203,28 +248,40 @@
           </div>
 
           <div class="form-group">
-            <label for="waktu_pelaksanaan">Waktu Pelaksanaan</label>
+            <label for="waktu_pelaksanaan">
+              Waktu Pelaksanaan <span class="required-mark">*</span>
+            </label>
+
             <input
-              type="datetime-local"
+              type="text"
               id="waktu_pelaksanaan"
               name="waktu_pelaksanaan"
+              class="datetime-picker"
               value="{{ old('waktu_pelaksanaan') }}"
+              placeholder="Pilih tanggal dan jam kegiatan"
               required
             >
           </div>
 
           <div class="form-group">
-            <label for="deskripsi">Deskripsi</label>
+            <label for="deskripsi">
+              Deskripsi <span class="required-mark">*</span>
+            </label>
+
             <textarea
               id="deskripsi"
               name="deskripsi"
               rows="4"
               placeholder="Tulis deskripsi kegiatan..."
+              required
             >{{ old('deskripsi') }}</textarea>
           </div>
 
           <div class="form-group">
-            <label for="link_zoom">Link Zoom</label>
+            <label for="link_zoom">
+              Link Zoom
+            </label>
+
             <input
               type="text"
               id="link_zoom"
@@ -235,13 +292,18 @@
           </div>
 
           <div class="form-group">
-            <label for="flayer">Flayer</label>
+            <label for="flayer">
+              Flayer <span class="required-mark">*</span>
+            </label>
+
             <input
               type="file"
               id="flayer"
               name="flayer"
               accept="image/*"
+              required
             >
+
             <small class="form-help">
               Gunakan gambar poster/flayer kegiatan agar tampilan publikasi lebih menarik.
             </small>
@@ -249,6 +311,7 @@
 
           <div class="form-group">
             <label>Link Pendaftaran</label>
+
             <input
               type="text"
               value="Auto generate setelah kegiatan disimpan"
@@ -256,12 +319,13 @@
             >
           </div>
 
-          <button type="submit" class="admin-submit-btn">
+          <button type="button" class="admin-submit-btn" id="openSaveModalButton">
             Simpan Kegiatan
           </button>
         </form>
       </div>
 
+      {{-- DATA KEGIATAN --}}
       <div class="admin-card kegiatan-data-card" id="data-kegiatan">
         <div class="section-heading compact">
           <div>
@@ -271,9 +335,29 @@
           </div>
         </div>
 
-        <div class="kegiatan-list">
+        <div class="kegiatan-search-box">
+          <input
+            type="text"
+            id="searchKegiatanInput"
+            placeholder="Cari nama kegiatan..."
+            autocomplete="off"
+          >
+
+          <button type="button" id="resetSearchKegiatan">
+            Reset
+          </button>
+        </div>
+
+        <div class="kegiatan-search-empty" id="searchKegiatanEmpty" hidden>
+          Kegiatan tidak ditemukan.
+        </div>
+
+        <div class="kegiatan-list" id="kegiatanList">
           @forelse($kegiatan as $item)
-            <article class="kegiatan-item">
+            <article
+              class="kegiatan-item"
+              data-nama-kegiatan="{{ strtolower($item->nama_kegiatan) }}"
+            >
               @if($item->flayer)
                 <div class="kegiatan-flayer-wrap">
                   <img
@@ -303,19 +387,25 @@
                 <div class="kegiatan-meta">
                   <small>Fasil: {{ $item->fasil ?? '-' }}</small>
                   <small>Kuota: {{ $item->kuota }}</small>
-                  <small>Waktu: {{ \Carbon\Carbon::parse($item->waktu_pelaksanaan)->format('d M Y H:i') }}</small>
+                  <small>
+                    Waktu:
+                    {{ \Carbon\Carbon::parse($item->waktu_pelaksanaan)->format('d M Y H:i') }}
+                  </small>
                 </div>
 
                 <div class="kegiatan-link-box">
                   <input type="text" value="{{ $item->link_pendaftaran }}" readonly>
-                  <a href="{{ $item->link_pendaftaran }}" target="_blank">Buka</a>
+
+                  <a href="{{ $item->link_pendaftaran }}" target="_blank" rel="noopener">
+                    Buka
+                  </a>
                 </div>
 
                 <form
                   action="{{ route('admin.kegiatan.destroy', $item->id) }}"
                   method="POST"
-                  class="delete-kegiatan-form"
-                  onsubmit="return confirm('Yakin mau hapus kegiatan ini?')"
+                  class="delete-kegiatan-form js-delete-form"
+                  data-kegiatan="{{ $item->nama_kegiatan }}"
                 >
                   @csrf
                   @method('DELETE')
@@ -335,8 +425,397 @@
       </div>
 
     </div>
-
   </div>
+
+  {{-- POPUP WAJIB ISI --}}
+  <div class="required-popup" id="requiredPopup" hidden>
+    <div class="required-popup-card">
+      <strong>Data belum lengkap</strong>
+      <p id="requiredPopupText">Mohon lengkapi field yang wajib diisi.</p>
+    </div>
+  </div>
+
+  {{-- MODAL KONFIRMASI SIMPAN --}}
+  <div class="save-modal" id="saveConfirmModal" hidden>
+    <div class="modal-backdrop" data-close-save-modal></div>
+
+    <div
+      class="modal-card"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="saveModalTitle"
+    >
+      <div class="modal-icon save-icon">
+        ✓
+      </div>
+
+      <h2 id="saveModalTitle">Simpan kegiatan?</h2>
+
+      <p>
+        Pastikan data kegiatan sudah benar sebelum disimpan ke database dan dipublikasikan.
+      </p>
+
+      <div class="modal-target">
+        Data kegiatan akan tersimpan setelah Anda menekan tombol konfirmasi.
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="modal-cancel-btn" data-close-save-modal>
+          Batal
+        </button>
+
+        <button type="button" class="modal-confirm-btn" id="confirmSaveButton">
+          Ya, Simpan
+        </button>
+      </div>
+    </div>
+  </div>
+
+  {{-- MODAL KONFIRMASI HAPUS --}}
+  <div class="delete-modal" id="deleteConfirmModal" hidden>
+    <div class="modal-backdrop" data-close-delete-modal></div>
+
+    <div
+      class="modal-card"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="deleteModalTitle"
+    >
+      <div class="modal-icon delete-icon">
+        !
+      </div>
+
+      <h2 id="deleteModalTitle">Yakin ingin hapus?</h2>
+
+      <p>
+        Data kegiatan ini akan dihapus dari database. Aksi ini tidak bisa dibatalkan.
+      </p>
+
+      <div class="modal-target" id="deleteModalTarget">
+        Kegiatan
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="modal-cancel-btn" data-close-delete-modal>
+          Tidak
+        </button>
+
+        <button type="button" class="modal-confirm-btn" id="confirmDeleteButton">
+          Ya, Hapus
+        </button>
+      </div>
+    </div>
+  </div>
+
 </section>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/id.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const waktuInput = document.getElementById('waktu_pelaksanaan');
+
+    if (waktuInput) {
+      flatpickr(waktuInput, {
+        enableTime: true,
+        time_24hr: false,
+        dateFormat: 'Y-m-d H:i',
+        altInput: true,
+        altFormat: 'd F Y, h:i K',
+        locale: 'id',
+        minuteIncrement: 5,
+        defaultHour: 9,
+        defaultMinute: 0,
+        disableMobile: true
+      });
+    }
+  });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('searchKegiatanInput');
+    const resetButton = document.getElementById('resetSearchKegiatan');
+    const emptySearch = document.getElementById('searchKegiatanEmpty');
+    const kegiatanItems = document.querySelectorAll('.kegiatan-item');
+
+    function filterKegiatan() {
+      if (!searchInput) {
+        return;
+      }
+
+      const keyword = searchInput.value.toLowerCase().trim();
+      let visibleCount = 0;
+
+      kegiatanItems.forEach(function (item) {
+        const namaKegiatan = item.getAttribute('data-nama-kegiatan') || '';
+
+        if (namaKegiatan.includes(keyword)) {
+          item.style.display = '';
+          visibleCount++;
+        } else {
+          item.style.display = 'none';
+        }
+      });
+
+      if (emptySearch) {
+        emptySearch.hidden = keyword === '' || visibleCount > 0;
+      }
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener('input', filterKegiatan);
+    }
+
+    if (resetButton && searchInput) {
+      resetButton.addEventListener('click', function () {
+        searchInput.value = '';
+        filterKegiatan();
+        searchInput.focus();
+      });
+    }
+  });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const saveForm = document.querySelector('.js-store-form');
+    const openSaveButton = document.getElementById('openSaveModalButton');
+
+    const saveModal = document.getElementById('saveConfirmModal');
+    const confirmSaveButton = document.getElementById('confirmSaveButton');
+    const closeSaveButtons = document.querySelectorAll('[data-close-save-modal]');
+
+    const requiredPopup = document.getElementById('requiredPopup');
+    const requiredPopupText = document.getElementById('requiredPopupText');
+
+    if (!saveForm || !openSaveButton || !saveModal || !confirmSaveButton) {
+      return;
+    }
+
+    function showRequiredPopup(message) {
+      if (!requiredPopup || !requiredPopupText) {
+        alert(message);
+        return;
+      }
+
+      requiredPopupText.textContent = message;
+      requiredPopup.hidden = false;
+
+      clearTimeout(window.requiredPopupTimer);
+
+      window.requiredPopupTimer = setTimeout(function () {
+        requiredPopup.hidden = true;
+      }, 3000);
+    }
+
+    function clearFieldErrors() {
+      saveForm.querySelectorAll('.form-group.has-error').forEach(function (group) {
+        group.classList.remove('has-error');
+      });
+    }
+
+    function setFieldError(field) {
+      const group = field.closest('.form-group');
+
+      if (group) {
+        group.classList.add('has-error');
+      }
+    }
+
+    function fieldEmpty(field) {
+      if (field.disabled) {
+        return false;
+      }
+
+      if (field.type === 'file') {
+        return !field.files || field.files.length === 0;
+      }
+
+      return String(field.value || '').trim() === '';
+    }
+
+    function fieldLabel(field) {
+      const group = field.closest('.form-group');
+      const label = group ? group.querySelector('label') : null;
+
+      if (!label) {
+        return 'Field ini';
+      }
+
+      return label.textContent.replace('*', '').trim();
+    }
+
+    function validateRequiredFields() {
+      clearFieldErrors();
+
+      const requiredFields = saveForm.querySelectorAll('[required]');
+      let firstInvalidField = null;
+
+      requiredFields.forEach(function (field) {
+        if (fieldEmpty(field)) {
+          setFieldError(field);
+
+          if (!firstInvalidField) {
+            firstInvalidField = field;
+          }
+        }
+      });
+
+      if (firstInvalidField) {
+        const label = fieldLabel(firstInvalidField);
+        const message = label + ' wajib diisi.';
+
+        showRequiredPopup(message);
+
+        const group = firstInvalidField.closest('.form-group');
+
+        if (group) {
+          group.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+          });
+        }
+
+        setTimeout(function () {
+          firstInvalidField.focus();
+        }, 350);
+
+        return false;
+      }
+
+      return true;
+    }
+
+    function openSaveModal() {
+      saveModal.hidden = false;
+      document.body.classList.add('modal-open');
+
+      confirmSaveButton.disabled = false;
+      confirmSaveButton.textContent = 'Ya, Simpan';
+    }
+
+    function closeSaveModal() {
+      saveModal.hidden = true;
+      document.body.classList.remove('modal-open');
+
+      confirmSaveButton.disabled = false;
+      confirmSaveButton.textContent = 'Ya, Simpan';
+    }
+
+    openSaveButton.addEventListener('click', function () {
+      const valid = validateRequiredFields();
+
+      if (!valid) {
+        return;
+      }
+
+      openSaveModal();
+    });
+
+    saveForm.querySelectorAll('input, select, textarea').forEach(function (field) {
+      field.addEventListener('input', function () {
+        if (!fieldEmpty(field)) {
+          const group = field.closest('.form-group');
+
+          if (group) {
+            group.classList.remove('has-error');
+          }
+        }
+      });
+
+      field.addEventListener('change', function () {
+        if (!fieldEmpty(field)) {
+          const group = field.closest('.form-group');
+
+          if (group) {
+            group.classList.remove('has-error');
+          }
+        }
+      });
+    });
+
+    closeSaveButtons.forEach(function (button) {
+      button.addEventListener('click', closeSaveModal);
+    });
+
+    confirmSaveButton.addEventListener('click', function () {
+      confirmSaveButton.disabled = true;
+      confirmSaveButton.textContent = 'Menyimpan...';
+
+      saveForm.submit();
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && !saveModal.hidden) {
+        closeSaveModal();
+      }
+    });
+  });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const modal = document.getElementById('deleteConfirmModal');
+    const targetText = document.getElementById('deleteModalTarget');
+    const confirmButton = document.getElementById('confirmDeleteButton');
+    const deleteForms = document.querySelectorAll('.js-delete-form');
+    const closeButtons = document.querySelectorAll('[data-close-delete-modal]');
+
+    let selectedForm = null;
+
+    if (!modal || !targetText || !confirmButton) {
+      return;
+    }
+
+    function openModal(form) {
+      selectedForm = form;
+
+      const kegiatanName = form.getAttribute('data-kegiatan') || 'Kegiatan ini';
+      targetText.textContent = kegiatanName;
+
+      modal.hidden = false;
+      document.body.classList.add('modal-open');
+
+      confirmButton.disabled = false;
+      confirmButton.textContent = 'Ya, Hapus';
+    }
+
+    function closeModal() {
+      modal.hidden = true;
+      document.body.classList.remove('modal-open');
+      selectedForm = null;
+
+      confirmButton.disabled = false;
+      confirmButton.textContent = 'Ya, Hapus';
+    }
+
+    deleteForms.forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        openModal(form);
+      });
+    });
+
+    closeButtons.forEach(function (button) {
+      button.addEventListener('click', closeModal);
+    });
+
+    confirmButton.addEventListener('click', function () {
+      if (selectedForm) {
+        confirmButton.disabled = true;
+        confirmButton.textContent = 'Menghapus...';
+        selectedForm.submit();
+      }
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && !modal.hidden) {
+        closeModal();
+      }
+    });
+  });
+</script>
 
 @endsection

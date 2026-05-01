@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\KegiatanController;
+use App\Http\Controllers\PublicDashboardController;
 
 Route::get('/', function () {
     return view('dashboard');
@@ -92,3 +93,6 @@ Route::get('/daftar-kegiatan/{slug}', function ($slug) {
 Route::delete('/admin/kegiatan/{kegiatan}', [KegiatanController::class, 'destroy'])
     ->middleware('auth')
     ->name('admin.kegiatan.destroy');
+
+Route::get('/dashboard', [PublicDashboardController::class, 'index'])
+    ->name('dashboard');

@@ -1,0 +1,621 @@
+/* =========================================================
+   LOGIN PAGE - CLEAN BADUY UI
+========================================================= */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
+:root {
+  --blue-950: #061f4f;
+  --blue-900: #0a2f6b;
+  --blue-800: #0b3f8a;
+  --blue-700: #0d56b6;
+  --blue-600: #155fca;
+
+  --sky-50: #f3f7ff;
+  --sky-100: #eaf2ff;
+
+  --ink: #0a2f6b;
+  --muted: #667085;
+  --line: #dfe8f6;
+
+  --danger: #b42318;
+  --danger-bg: #fff0f0;
+  --danger-line: #ffd0d0;
+
+  --font-main: "Outfit", sans-serif;
+}
+
+.login-page,
+.login-page * {
+  font-family: var(--font-main);
+}
+
+/* hide footer di halaman login */
+.site-footer {
+  display: none !important;
+}
+
+/* =========================================================
+   PAGE
+========================================================= */
+.login-page {
+  position: relative;
+  min-height: calc(100vh - 82px);
+  padding: 24px 0;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 12% 12%, rgba(13, 86, 182, 0.13), transparent 30%),
+    radial-gradient(circle at 90% 88%, rgba(10, 47, 107, 0.10), transparent 30%),
+    linear-gradient(180deg, #ffffff 0%, #eef5ff 100%);
+}
+
+.login-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.86)),
+    url("/images/baduy.jpg");
+  background-size: 320px auto;
+  background-repeat: repeat;
+  background-position: center;
+  opacity: 0.14;
+  pointer-events: none;
+}
+
+.login-wrapper {
+  position: relative;
+  z-index: 2;
+  width: min(1280px, calc(100% - 32px));
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.25fr 0.8fr;
+  gap: 34px;
+  align-items: center;
+}
+
+/* =========================================================
+   LEFT PANEL
+========================================================= */
+.login-visual {
+  position: relative;
+  width: 100%;
+  min-height: 470px;
+  padding: 30px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  border-radius: 24px;
+  background:
+    linear-gradient(135deg, rgba(6, 31, 79, 0.95), rgba(13, 86, 182, 0.78)),
+    url("/images/baduy.jpg");
+  background-size: cover;
+  background-position: center;
+  box-shadow:
+    0 24px 64px rgba(10, 47, 107, 0.20),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.login-visual::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.14), transparent 34%),
+    linear-gradient(180deg, rgba(5, 22, 56, 0.04), rgba(5, 22, 56, 0.44));
+}
+
+.login-visual::after {
+  content: "";
+  position: absolute;
+  inset: 14px;
+  z-index: 2;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 18px;
+  pointer-events: none;
+}
+
+.login-visual-content {
+  position: relative;
+  z-index: 3;
+  max-width: 620px;
+}
+
+.login-visual .eyebrow {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 900;
+  backdrop-filter: blur(10px);
+}
+
+.login-visual h2 {
+  max-width: 600px;
+  margin: 18px 0 14px;
+  color: #ffffff;
+  font-size: clamp(30px, 3.5vw, 42px);
+  line-height: 1.08;
+  letter-spacing: -1.2px;
+  font-weight: 900;
+}
+
+.login-visual-content > p {
+  max-width: 580px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 14px;
+  line-height: 1.7;
+  font-weight: 700;
+}
+
+/* =========================================================
+   QUOTE
+========================================================= */
+.baduy-quote {
+  margin-top: 20px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(12px);
+}
+
+.quote-line {
+  display: block;
+  width: 48px;
+  height: 4px;
+  margin-bottom: 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.baduy-quote p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 13px;
+  line-height: 1.6;
+  font-weight: 800;
+}
+
+/* =========================================================
+   BENEFITS
+========================================================= */
+.login-benefits {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.login-benefits div {
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(10px);
+}
+
+.login-benefits strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #ffffff;
+  font-size: 24px;
+  line-height: 1;
+  font-weight: 900;
+}
+
+.login-benefits span {
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+/* =========================================================
+   LOGIN CARD
+========================================================= */
+.login-card {
+  position: relative;
+  width: 100%;
+  max-width: 470px;
+  justify-self: center;
+  overflow: hidden;
+  padding: 28px 32px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.86);
+  box-shadow:
+    0 44px 110px rgba(10, 47, 107, 0.26),
+    0 18px 42px rgba(10, 47, 107, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(18px);
+}
+
+.login-card::before {
+  display: none;
+}
+
+.login-header {
+  margin-bottom: 22px;
+}
+
+.login-kicker {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  background: var(--sky-100);
+  color: var(--blue-700);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.login-header h1 {
+  margin: 0;
+  color: var(--blue-900);
+  font-size: 30px;
+  line-height: 1.1;
+  letter-spacing: -0.6px;
+  font-weight: 900;
+}
+
+.login-header p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+  font-weight: 700;
+}
+
+/* =========================================================
+   ALERT
+========================================================= */
+.login-card .alert-error {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--danger-bg);
+  color: var(--danger);
+  border: 1px solid var(--danger-line);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   FORM
+========================================================= */
+.login-form {
+  display: grid;
+  gap: 14px;
+}
+
+.login-form .form-group {
+  display: grid;
+  gap: 7px;
+}
+
+.login-form .form-group label {
+  color: var(--blue-900);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.login-form .form-group input {
+  width: 100%;
+  height: 48px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  padding: 0 15px;
+  color: #1f2937;
+  background: #eef5ff;
+  font-size: 13px;
+  font-weight: 700;
+  outline: none;
+  transition: 0.22s ease;
+}
+
+.login-form .form-group input::placeholder {
+  color: #7d8798;
+  font-weight: 500;
+}
+
+.login-form .form-group input:focus {
+  border-color: var(--blue-700);
+  background: #ffffff;
+  box-shadow:
+    0 0 0 4px rgba(13, 86, 182, 0.11),
+    0 12px 26px rgba(10, 47, 107, 0.08);
+}
+
+/* =========================================================
+   PASSWORD FIELD
+========================================================= */
+.password-field {
+  position: relative;
+}
+
+.password-field input {
+  padding-right: 52px !important;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #dbe5f3;
+  border-radius: 13px;
+  background: #ffffff;
+  color: var(--blue-700);
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: 0.2s ease;
+}
+
+.password-toggle:hover {
+  background: #eaf2ff;
+  border-color: var(--blue-700);
+}
+
+.password-toggle svg {
+  display: block;
+  width: 19px;
+  height: 19px;
+}
+
+/* =========================================================
+   OPTIONS
+========================================================= */
+.form-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.remember {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.remember input[type="checkbox"] {
+  width: 16px !important;
+  height: 16px !important;
+  min-width: 16px;
+  accent-color: var(--blue-800);
+  cursor: pointer;
+}
+
+.remember span {
+  line-height: 1;
+}
+
+.form-options a {
+  color: var(--blue-700);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.form-options a:hover {
+  text-decoration: underline;
+}
+
+/* =========================================================
+   SUBMIT
+========================================================= */
+.login-submit {
+  position: relative;
+  width: 100%;
+  height: 48px;
+  border: none;
+  border-radius: 15px;
+  overflow: hidden;
+  background-color: #074a9a;
+  background-image:
+    linear-gradient(
+      135deg,
+      rgba(13, 86, 182, 0.66) 0%,
+      rgba(13, 86, 182, 0.66) 48%,
+      rgba(13, 86, 182, 0.66) 100%
+    ),
+    url("/images/baduy.jpg");
+  background-repeat: no-repeat, repeat;
+  background-size: cover, 150px auto;
+  background-position: center, center;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 16px 34px rgba(10, 63, 138, 0.26);
+  transition: 0.22s ease;
+  isolation: isolate;
+}
+
+.login-submit::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(10, 47, 107, 0.18),
+      rgba(13, 86, 182, 0.08)
+    );
+  pointer-events: none;
+  z-index: -1;
+}
+
+.login-submit:hover {
+  transform: translateY(-2px);
+  background-image:
+    linear-gradient(
+      135deg,
+      rgba(13, 86, 182, 0.66) 0%,
+      rgba(13, 86, 182, 0.66) 48%,
+      rgba(13, 86, 182, 0.66) 100%
+    ),
+    url("/images/baduy.jpg");
+  box-shadow: 0 20px 42px rgba(10, 63, 138, 0.34);
+}
+
+.login-submit:active {
+  transform: translateY(0);
+}
+
+/* =========================================================
+   REGISTER
+========================================================= */
+.login-register {
+  margin: 16px 0 0;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.login-register a {
+  color: var(--blue-700);
+  font-weight: 900;
+}
+
+.login-register a:hover {
+  text-decoration: underline;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media (max-width: 1100px) {
+  .login-page {
+    align-items: flex-start;
+  }
+
+  .login-wrapper {
+    width: min(760px, calc(100% - 32px));
+    grid-template-columns: 1fr;
+  }
+
+  .login-visual {
+    min-height: 430px;
+  }
+
+  .login-card {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 720px) {
+  .login-page {
+    padding: 24px 0 36px;
+  }
+
+  .login-wrapper {
+    width: min(100% - 24px, 760px);
+    gap: 22px;
+  }
+
+  .login-visual,
+  .login-card {
+    border-radius: 22px;
+  }
+
+  .login-visual {
+    min-height: auto;
+    padding: 24px;
+  }
+
+  .login-visual::after {
+    inset: 12px;
+    border-radius: 18px;
+  }
+
+  .login-visual h2 {
+    font-size: 30px;
+    letter-spacing: -1px;
+  }
+
+  .login-visual-content > p {
+    font-size: 14px;
+  }
+
+  .login-card {
+    padding: 24px;
+  }
+
+  .login-header h1 {
+    font-size: 28px;
+  }
+
+  .login-benefits {
+    grid-template-columns: 1fr;
+  }
+
+  .form-options {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+/* =========================================================
+   REMOVE BOTTOM EMPTY SPACE
+========================================================= */
+.main {
+  min-height: auto !important;
+}
+
+.login-page {
+  min-height: auto !important;
+  padding: 24px 0 50px !important;
+  align-items: flex-start !important;
+}
+
+.login-wrapper {
+  align-items: center;
+}
+
+/* =========================================================
+   LOGIN MOBILE - SEMBUNYIKAN CARD/HERO KIRI
+========================================================= */
+
+@media (max-width: 768px) {
+  .login-visual {
+    display: none !important;
+  }
+
+  .login-page {
+    min-height: calc(100vh - 70px);
+    padding: 24px 0 40px;
+  }
+
+  .login-wrapper {
+    width: min(100% - 28px, 460px);
+    margin: 0 auto;
+    display: block !important;
+  }
+
+  .login-card {
+    width: 100% !important;
+    min-height: auto;
+    padding: 28px 22px !important;
+    border-radius: 24px;
+  }
+}
+

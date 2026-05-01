@@ -1,0 +1,904 @@
+/* =========================================================
+   SITE HEADER
+========================================================= */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom: 1px solid var(--line, #e6ebf4);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 10px 30px rgba(10, 47, 107, 0.06);
+}
+
+.header-inner {
+  position: relative;
+
+  min-height: 82px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+}
+
+/* =========================================================
+   BRAND
+========================================================= */
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+
+  min-width: fit-content;
+
+  color: var(--blue-900, #0a2f6b);
+  text-decoration: none;
+}
+
+.brand-logo {
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
+
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+
+  color: white;
+  font-size: 22px;
+  font-weight: 900;
+
+  background-color: #0d56b6;
+  background-image:
+    linear-gradient(
+      135deg,
+      rgba(7, 45, 105, 0.62) 0%,
+      rgba(10, 63, 138, 0.56) 48%,
+      rgba(13, 86, 182, 0.50) 100%
+    ),
+    url("/images/baduy.jpg");
+  background-repeat: no-repeat, repeat;
+  background-size: cover, 90px auto;
+  background-position: center, center;
+
+  box-shadow: 0 12px 26px rgba(10, 63, 138, 0.22);
+}
+
+.brand h1 {
+  margin: 0;
+
+  color: var(--blue-900, #0a2f6b);
+  font-size: 18px;
+  line-height: 1.1;
+  font-weight: 900;
+}
+
+.brand p {
+  margin: 4px 0 0;
+
+  color: var(--muted, #5b6474);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* =========================================================
+   HAMBURGER BUTTON
+========================================================= */
+
+.header-menu-toggle {
+  display: none;
+
+  width: 46px;
+  height: 46px;
+  border-radius: 15px;
+
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+
+  background: #e7f0ff;
+  border: 1px solid var(--line, #e6ebf4);
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.header-menu-toggle span {
+  width: 20px;
+  height: 2px;
+  border-radius: 999px;
+
+  background: var(--blue-900, #0a2f6b);
+
+  transition: 0.2s ease;
+}
+
+.header-menu-toggle:hover {
+  background: #dceaff;
+}
+
+.header-menu-toggle.is-open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.header-menu-toggle.is-open span:nth-child(2) {
+  opacity: 0;
+}
+
+.header-menu-toggle.is-open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* =========================================================
+   NAV MENU - DESKTOP DEFAULT
+========================================================= */
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  flex: 1;
+}
+
+.nav-menu a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 42px;
+  padding: 0 14px;
+  border-radius: 999px;
+
+  color: var(--muted, #5b6474);
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+
+  transition: 0.2s ease;
+}
+
+.nav-menu a:hover {
+  color: var(--blue-900, #0a2f6b);
+  background: #e7f0ff;
+}
+
+/* =========================================================
+   HEADER ACTIONS
+========================================================= */
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  min-width: fit-content;
+}
+
+/* =========================================================
+   USER DROPDOWN / LOGIN BUTTON
+========================================================= */
+
+.user-dropdown {
+  position: relative;
+}
+
+.user-dropdown summary {
+  list-style: none;
+}
+
+.user-dropdown summary::-webkit-details-marker {
+  display: none;
+}
+
+.baduy-user-trigger {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  min-height: 52px;
+  padding: 0 24px;
+  border-radius: 999px;
+
+  color: #ffffff !important;
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1;
+  text-decoration: none;
+
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+
+  background-color: #074a9a;
+  background-image:
+    linear-gradient(
+      135deg,
+      rgba(12, 74, 160, 0.78) 0%,
+      rgba(13, 86, 182, 0.72) 48%,
+      rgba(31, 111, 211, 0.68) 100%
+    ),
+    url("/images/baduy.jpg") !important;
+
+  background-repeat: no-repeat, repeat !important;
+  background-size: cover, 130px auto !important;
+  background-position: center, center !important;
+
+  box-shadow:
+    0 14px 30px rgba(10, 63, 138, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.baduy-user-trigger:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 18px 36px rgba(10, 63, 138, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.user-trigger-name {
+  position: relative;
+  z-index: 2;
+
+  max-width: 170px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.user-trigger-arrow {
+  position: relative;
+  z-index: 2;
+
+  font-size: 12px;
+  opacity: 0.95;
+  margin-top: 2px;
+}
+
+.user-dropdown[open] .user-trigger-arrow {
+  transform: rotate(180deg);
+}
+
+.user-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  z-index: 1200;
+
+  width: 260px;
+  padding: 14px;
+  border-radius: 20px;
+
+  background: white;
+  border: 1px solid var(--line, #e6ebf4);
+  box-shadow:
+    0 26px 70px rgba(10, 47, 107, 0.18),
+    0 10px 24px rgba(10, 47, 107, 0.10);
+}
+
+.user-dropdown-info {
+  padding: 12px;
+  border-radius: 16px;
+  background: var(--sky-50, #f3f7ff);
+  border: 1px solid var(--line, #e6ebf4);
+  margin-bottom: 12px;
+}
+
+.user-dropdown-info strong {
+  display: block;
+
+  color: var(--blue-900, #0a2f6b);
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.user-dropdown-info small {
+  display: block;
+
+  color: var(--muted, #5b6474);
+  font-size: 12px;
+  line-height: 1.5;
+  word-break: break-all;
+}
+
+.dropdown-logout-btn {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+
+  width: 100%;
+  min-height: 44px;
+  border: none !important;
+  border-radius: 14px;
+
+  color: #ffffff !important;
+  font-size: 14px;
+  font-weight: 900;
+  font-family: inherit;
+  cursor: pointer;
+
+  background-color: #074a9a;
+  background-image:
+    linear-gradient(
+      135deg,
+      rgba(12, 74, 160, 0.78) 0%,
+      rgba(13, 86, 182, 0.72) 48%,
+      rgba(31, 111, 211, 0.68) 100%
+    ),
+    url("/images/baduy.jpg") !important;
+
+  background-repeat: no-repeat, repeat !important;
+  background-size: cover, 120px auto !important;
+  background-position: center, center !important;
+
+  box-shadow:
+    0 12px 26px rgba(10, 63, 138, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+
+  transition: 0.2s ease;
+}
+
+.dropdown-logout-btn:hover {
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   AUTH / ADMIN RESPONSIVE
+   Kalau user login, menu admin banyak, jadi hamburger dari 900px.
+========================================================= */
+
+@media (max-width: 900px) {
+  .header-auth .header-inner {
+    min-height: 72px;
+    gap: 10px;
+    justify-content: flex-start;
+  }
+
+  .header-auth .brand-logo {
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    font-size: 20px;
+  }
+
+  .header-auth .brand h1 {
+    font-size: 16px;
+  }
+
+  .header-auth .brand p {
+    font-size: 11px;
+  }
+
+  .header-auth .header-menu-toggle {
+    display: inline-flex;
+    order: 2;
+    margin-left: auto;
+  }
+
+  .header-auth .header-actions {
+    order: 3;
+    margin-left: 0;
+  }
+
+  .header-auth .nav-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    right: 0;
+    z-index: 1100;
+
+    display: none;
+    flex: unset;
+    width: 100%;
+
+    padding: 12px;
+    border-radius: 22px;
+
+    background: rgba(255, 255, 255, 0.98);
+    border: 1px solid var(--line, #e6ebf4);
+    box-shadow:
+      0 22px 54px rgba(10, 47, 107, 0.16),
+      0 8px 18px rgba(10, 47, 107, 0.08);
+
+    backdrop-filter: blur(16px);
+  }
+
+  .header-auth .nav-menu.is-open {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .header-auth .nav-menu a {
+    width: 100%;
+    min-height: 44px;
+    justify-content: flex-start;
+
+    padding: 0 15px;
+    border-radius: 14px;
+
+    background: #f3f7ff;
+    color: var(--blue-900, #0a2f6b);
+  }
+
+  .header-auth .nav-menu a:hover {
+    background: #e7f0ff;
+    transform: translateX(3px);
+  }
+
+  .header-auth .baduy-user-trigger {
+    min-height: 46px;
+    padding: 0 16px;
+    font-size: 13px;
+  }
+
+  .header-auth .user-trigger-name {
+    max-width: 110px;
+  }
+
+  .header-auth .user-dropdown-menu {
+    width: 230px;
+    right: 0;
+  }
+}
+
+/* =========================================================
+   GUEST / NON LOGIN RESPONSIVE
+   Desktop dan tablet tetap navbar normal.
+   Hamburger guest baru aktif di 480px.
+========================================================= */
+
+@media (max-width: 480px) {
+  .header-guest .header-inner {
+    min-height: 66px;
+    gap: 8px;
+    justify-content: flex-start;
+  }
+
+  .header-guest .brand {
+    max-width: 190px;
+  }
+
+  .header-guest .brand-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 14px;
+    font-size: 18px;
+  }
+
+  .header-guest .brand h1 {
+    font-size: 14px;
+  }
+
+  .header-guest .brand p {
+    display: none;
+  }
+
+  .header-guest .header-menu-toggle {
+    display: inline-flex;
+    order: 2;
+    margin-left: auto;
+  }
+
+  .header-guest .header-actions {
+    order: 3;
+    margin-left: 0;
+  }
+
+  .header-guest .baduy-user-trigger {
+    min-height: 42px;
+    padding: 0 14px;
+    font-size: 13px;
+  }
+
+  .header-guest .nav-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    right: 0;
+    z-index: 1100;
+
+    display: none;
+    flex: unset;
+    width: 100%;
+
+    padding: 12px;
+    border-radius: 20px;
+
+    background: rgba(255, 255, 255, 0.98);
+    border: 1px solid var(--line, #e6ebf4);
+    box-shadow:
+      0 22px 54px rgba(10, 47, 107, 0.16),
+      0 8px 18px rgba(10, 47, 107, 0.08);
+
+    backdrop-filter: blur(16px);
+  }
+
+  .header-guest .nav-menu.is-open {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .header-guest .nav-menu a {
+    width: 100%;
+    min-height: 42px;
+    justify-content: flex-start;
+
+    padding: 0 14px;
+    border-radius: 14px;
+
+    background: #f3f7ff;
+    color: var(--blue-900, #0a2f6b);
+  }
+
+  .header-guest .nav-menu a:hover {
+    background: #e7f0ff;
+    transform: translateX(3px);
+  }
+}
+
+@media (max-width: 420px) {
+  .header-guest .brand {
+    max-width: 170px;
+  }
+
+  .header-guest .brand h1 {
+    font-size: 13px;
+  }
+
+  .header-guest .baduy-user-trigger {
+    padding: 0 12px;
+  }
+}
+
+/* =========================================================
+   LOGIN PAGE KHUSUS
+   Kalau mau login page baru hamburger di 320px,
+   tambahin body class login-body di layouts/app.blade.php.
+========================================================= */
+
+@media (min-width: 321px) {
+  .login-body .header-guest .header-inner {
+    min-height: 82px;
+    justify-content: space-between;
+    gap: 22px;
+  }
+
+  .login-body .header-guest .brand {
+    max-width: none;
+  }
+
+  .login-body .header-guest .brand-logo {
+    width: 46px;
+    height: 46px;
+    border-radius: 16px;
+    font-size: 22px;
+  }
+
+  .login-body .header-guest .brand h1 {
+    font-size: 18px;
+  }
+
+  .login-body .header-guest .brand p {
+    display: block;
+    font-size: 12px;
+  }
+
+  .login-body .header-guest .header-menu-toggle {
+    display: none !important;
+  }
+
+  .login-body .header-guest .nav-menu {
+    position: static;
+    display: flex !important;
+    flex: 1;
+    width: auto;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+    backdrop-filter: none;
+  }
+
+  .login-body .header-guest .nav-menu a {
+    width: auto;
+    min-height: 42px;
+    justify-content: center;
+    padding: 0 14px;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--muted, #5b6474);
+  }
+
+  .login-body .header-guest .nav-menu a:hover {
+    color: var(--blue-900, #0a2f6b);
+    background: #e7f0ff;
+    transform: none;
+  }
+
+  .login-body .header-guest .header-actions {
+    order: initial;
+    margin-left: 0;
+  }
+
+  .login-body .header-guest .baduy-user-trigger {
+    min-height: 52px;
+    padding: 0 24px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 320px) {
+  .login-body .header-guest .header-inner {
+    min-height: 66px;
+    gap: 8px;
+    justify-content: flex-start;
+  }
+
+  .login-body .header-guest .brand {
+    max-width: 150px;
+  }
+
+  .login-body .header-guest .brand-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 14px;
+    font-size: 18px;
+  }
+
+  .login-body .header-guest .brand h1 {
+    font-size: 13px;
+  }
+
+  .login-body .header-guest .brand p {
+    display: none;
+  }
+
+  .login-body .header-guest .header-menu-toggle {
+    display: inline-flex !important;
+    order: 2;
+    margin-left: auto;
+  }
+
+  .login-body .header-guest .header-actions {
+    order: 3;
+    margin-left: 0;
+  }
+
+  .login-body .header-guest .baduy-user-trigger {
+    min-height: 42px;
+    padding: 0 12px;
+    font-size: 13px;
+  }
+
+  .login-body .header-guest .nav-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    right: 0;
+    z-index: 1100;
+
+    display: none !important;
+    flex: unset;
+    width: 100%;
+
+    padding: 12px;
+    border-radius: 20px;
+
+    background: rgba(255, 255, 255, 0.98);
+    border: 1px solid var(--line, #e6ebf4);
+    box-shadow:
+      0 22px 54px rgba(10, 47, 107, 0.16),
+      0 8px 18px rgba(10, 47, 107, 0.08);
+
+    backdrop-filter: blur(16px);
+  }
+
+  .login-body .header-guest .nav-menu.is-open {
+    display: grid !important;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .login-body .header-guest .nav-menu a {
+    width: 100%;
+    min-height: 42px;
+    justify-content: flex-start;
+
+    padding: 0 14px;
+    border-radius: 14px;
+
+    background: #f3f7ff;
+    color: var(--blue-900, #0a2f6b);
+  }
+}
+
+/* =========================================================
+   DESKTOP ONLY - GESER NAVBAR KE KANAN DEKAT LOGIN
+========================================================= */
+
+@media (min-width: 901px) {
+  .header-guest .header-inner {
+    justify-content: flex-start !important;
+  }
+
+  .header-guest .brand {
+    flex: 0 0 auto !important;
+  }
+
+  .header-guest .nav-menu {
+    flex: 0 0 auto !important;
+    margin-left: auto !important;
+    margin-right: -10px !important;
+
+    justify-content: flex-end !important;
+  }
+
+  .header-guest .header-actions {
+    flex: 0 0 auto !important;
+    margin-left: 0 !important;
+  }
+}
+
+/* =========================================================
+   DESKTOP AUTH HEADER - NAV DEKET KE USER BUTTON
+========================================================= */
+
+@media (min-width: 901px) {
+  .header-auth .header-inner {
+    justify-content: flex-start !important;
+  }
+
+  .header-auth .brand {
+    flex: 0 0 auto !important;
+  }
+
+  .header-auth .nav-menu {
+    flex: 0 0 auto !important;
+    margin-left: auto !important;
+    margin-right: -8px !important;
+    justify-content: flex-end !important;
+  }
+
+  .header-auth .header-actions {
+    flex: 0 0 auto !important;
+    margin-left: 0 !important;
+  }
+}
+
+/* =========================================================
+   AUTH MOBILE HEADER - USER BUTTON TETAP SAMPING HAMBURGER
+========================================================= */
+
+@media (max-width: 900px) {
+  .header-auth .header-inner {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 8px !important;
+    min-height: 66px !important;
+  }
+
+  .header-auth .brand {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    max-width: 180px !important;
+  }
+
+  .header-auth .brand-logo {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 14px !important;
+    font-size: 18px !important;
+  }
+
+  .header-auth .brand h1 {
+    font-size: 14px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .header-auth .brand p {
+    display: none !important;
+  }
+
+  /* user button pindah ke samping hamburger */
+  .header-auth .header-actions {
+    order: 2 !important;
+    flex: 0 0 auto !important;
+    margin-left: auto !important;
+  }
+
+  .header-auth .user-dropdown {
+    display: block !important;
+  }
+
+  .header-auth .baduy-user-trigger {
+    min-height: 40px !important;
+    max-width: 132px !important;
+    padding: 0 12px !important;
+    gap: 6px !important;
+    font-size: 12px !important;
+    border-radius: 999px !important;
+  }
+
+  .header-auth .user-trigger-name {
+    max-width: 88px !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .header-auth .user-trigger-arrow {
+    font-size: 10px !important;
+  }
+
+  /* hamburger paling kanan */
+  .header-auth .header-menu-toggle {
+    order: 3 !important;
+    display: inline-flex !important;
+    flex: 0 0 auto !important;
+    width: 42px !important;
+    height: 42px !important;
+    margin-left: 0 !important;
+    border-radius: 14px !important;
+  }
+
+  .header-auth .nav-menu {
+    top: calc(100% + 10px) !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .header-auth .brand {
+    max-width: 160px !important;
+  }
+
+  .header-auth .brand h1 {
+    font-size: 13px !important;
+  }
+
+  .header-auth .baduy-user-trigger {
+    max-width: 118px !important;
+    padding: 0 10px !important;
+    font-size: 11.5px !important;
+  }
+
+  .header-auth .user-trigger-name {
+    max-width: 76px !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .header-auth .brand {
+    max-width: 130px !important;
+  }
+
+  .header-auth .brand h1 {
+    font-size: 12px !important;
+  }
+
+  .header-auth .baduy-user-trigger {
+    max-width: 104px !important;
+  }
+
+  .header-auth .user-trigger-name {
+    max-width: 64px !important;
+  }
+}

@@ -2,11 +2,15 @@
 
 @section('title', 'Admin Dashboard - MOOC BGTK Banten')
 
+@push('styles')
+  <link rel="stylesheet" href="{{ asset('css/admin-dashboard.css') }}">
+@endpush
+
 @section('content')
 
 <section class="admin-profile-page">
 
-  {{-- HERO SPLIT 70/30 TANPA FADE --}}
+  {{-- HERO SPLIT --}}
   <section class="admin-hero-split">
     <div class="admin-hero-left-panel">
       <div class="container">
@@ -71,6 +75,7 @@
     <div class="profile-app-grid">
       <div class="profile-app-card wide-card">
         <span class="card-kicker">Tentang Aplikasi</span>
+
         <h2>MOOC BGTK Banten</h2>
 
         <p>
@@ -90,6 +95,7 @@
 
       <div class="profile-app-card">
         <span class="card-kicker">Fitur Utama</span>
+
         <h3>Yang Bisa Dikelola</h3>
 
         <div class="feature-list">
@@ -114,6 +120,7 @@
     <div class="profile-purpose-section">
       <div>
         <span class="card-kicker">Tujuan Sistem</span>
+
         <h2>Membantu pengelolaan kegiatan secara digital.</h2>
       </div>
 

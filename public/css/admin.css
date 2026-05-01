@@ -1,6 +1,20 @@
-/* =========================================================
-   ADMIN PROFILE PAGE
-========================================================= */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
+:root {
+  --font-main: "Outfit", sans-serif;
+}
+
+.admin-kegiatan-page,
+.admin-kegiatan-page *,
+.delete-modal,
+.delete-modal * {
+  font-family: var(--font-main);
+}
+.admin-kegiatan-page {
+  padding: 0 0 72px;
+  background: linear-gradient(180deg, #ffffff 0%, var(--sky-50) 100%);
+}
+
 .admin-profile-page {
   padding: 0 0 72px;
   background:
@@ -458,4 +472,450 @@
 /* kanan tetap foto */
 .admin-hero-right-panel {
   background: transparent;
+}
+
+/* =========================================================
+   SITE HEADER
+========================================================= */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 10px 30px rgba(10, 47, 107, 0.06);
+}
+
+.header-inner {
+  min-height: 86px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+}
+
+/* =========================================================
+   BRAND
+========================================================= */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-width: fit-content;
+  color: var(--blue-900);
+  text-decoration: none;
+}
+
+.brand-logo {
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  color: white;
+  font-size: 22px;
+  font-weight: 900;
+  background-color: #0d56b6;
+  background-image:
+    linear-gradient(
+      135deg,
+      rgba(7, 45, 105, 0.62) 0%,
+      rgba(10, 63, 138, 0.56) 48%,
+      rgba(13, 86, 182, 0.50) 100%
+    ),
+    url("/images/baduy.jpg");
+  background-repeat: no-repeat, repeat;
+  background-size: cover, 90px auto;
+  background-position: center, center;
+  box-shadow: 0 12px 26px rgba(10, 63, 138, 0.22);
+}
+
+.brand h1 {
+  margin: 0;
+  color: var(--blue-900);
+  font-size: 18px;
+  line-height: 1.1;
+  font-weight: 900;
+}
+
+.brand p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* =========================================================
+   NAV MENU
+========================================================= */
+.nav-menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.nav-menu a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 14px;
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.nav-menu a:hover {
+  color: var(--blue-900);
+  background: #e7f0ff;
+}
+
+/* =========================================================
+   HEADER ACTIONS
+========================================================= */
+.header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: fit-content;
+}
+
+/* =========================================================
+   USER DROPDOWN
+========================================================= */
+.user-dropdown {
+  position: relative;
+}
+
+.user-dropdown summary {
+  list-style: none;
+}
+
+.user-dropdown summary::-webkit-details-marker {
+  display: none;
+}
+
+/* tombol user/login pakai bg baduy */
+.baduy-user-trigger {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  min-height: 58px;
+  padding: 0 28px;
+  border-radius: 999px;
+
+  color: #ffffff !important;
+  font-size: 17px;
+  font-weight: 900;
+  line-height: 1;
+  text-decoration: none;
+
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+
+  background-color: #074a9a;
+  background-image:
+    linear-gradient(
+      135deg,
+      rgba(12, 74, 160, 0.78) 0%,
+      rgba(13, 86, 182, 0.72) 48%,
+      rgba(31, 111, 211, 0.68) 100%
+    ),
+    url("/images/baduy.jpg") !important;
+
+  background-repeat: no-repeat, repeat !important;
+  background-size: cover, 130px auto !important;
+  background-position: center, center !important;
+
+  box-shadow:
+    0 14px 30px rgba(10, 63, 138, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.baduy-user-trigger:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 18px 36px rgba(10, 63, 138, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.user-trigger-name {
+  position: relative;
+  z-index: 2;
+  max-width: 190px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.user-trigger-arrow {
+  position: relative;
+  z-index: 2;
+  font-size: 12px;
+  opacity: 0.95;
+  margin-top: 2px;
+}
+
+.user-dropdown[open] .user-trigger-arrow {
+  transform: rotate(180deg);
+}
+
+/* dropdown menu */
+.user-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: 260px;
+  padding: 14px;
+  border-radius: 20px;
+  background: white;
+  border: 1px solid var(--line);
+  box-shadow:
+    0 26px 70px rgba(10, 47, 107, 0.18),
+    0 10px 24px rgba(10, 47, 107, 0.10);
+  z-index: 50;
+}
+
+.user-dropdown-info {
+  padding: 12px;
+  border-radius: 16px;
+  background: var(--sky-50);
+  border: 1px solid var(--line);
+  margin-bottom: 12px;
+}
+
+.user-dropdown-info strong {
+  display: block;
+  color: var(--blue-900);
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.user-dropdown-info small {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+  word-break: break-all;
+}
+
+/* logout button */
+.dropdown-logout-btn {
+  width: 100%;
+  min-height: 42px;
+  border: none;
+  border-radius: 14px;
+  background: #fff0f0;
+  color: #b42318;
+  font-size: 14px;
+  font-weight: 900;
+  cursor: pointer;
+  font-family: inherit;
+  border: 1px solid #ffd0d0;
+  transition: 0.2s ease;
+}
+
+.dropdown-logout-btn:hover {
+  background: #b42318;
+  color: white;
+}
+
+/* login fallback */
+.login-btn {
+  min-height: 52px;
+  padding: 0 26px;
+  border-radius: 999px;
+}
+
+/* =========================================================
+   RESPONSIVE HEADER
+========================================================= */
+@media (max-width: 1100px) {
+  .header-inner {
+    flex-wrap: wrap;
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
+
+  .nav-menu {
+    order: 3;
+    width: 100%;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .nav-menu::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .nav-menu::-webkit-scrollbar-thumb {
+    background: #d7e5f7;
+    border-radius: 999px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-inner {
+    gap: 16px;
+  }
+
+  .brand h1 {
+    font-size: 16px;
+  }
+
+  .brand p {
+    font-size: 11px;
+  }
+
+  .brand-logo {
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+  }
+
+  .baduy-user-trigger {
+    min-height: 50px;
+    padding: 0 20px;
+    font-size: 15px;
+  }
+
+  .user-trigger-name {
+    max-width: 140px;
+  }
+
+  .user-dropdown-menu {
+    right: 0;
+    width: 240px;
+  }
+}
+
+@media (max-width: 560px) {
+  .header-inner {
+    align-items: flex-start;
+  }
+
+  .brand {
+    max-width: 190px;
+  }
+
+  .brand h1 {
+    font-size: 15px;
+  }
+
+  .brand p {
+    display: none;
+  }
+
+  .baduy-user-trigger {
+    min-height: 46px;
+    padding: 0 16px;
+    font-size: 14px;
+  }
+
+  .user-trigger-name {
+    max-width: 110px;
+  }
+
+  .user-dropdown-menu {
+    width: 220px;
+  }
+
+  .nav-menu a {
+    min-height: 38px;
+    padding: 0 12px;
+    font-size: 13px;
+  }
+}
+
+/* =========================================================
+   LOGOUT BUTTON - BG BADUY
+   Taruh paling bawah app.css / css header
+========================================================= */
+.dropdown-logout-btn {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+
+  width: 100%;
+  min-height: 44px;
+  border: none !important;
+  border-radius: 14px;
+
+  color: #ffffff !important;
+  font-size: 14px;
+  font-weight: 900;
+  font-family: inherit;
+  cursor: pointer;
+
+  background-color: #074a9a;
+  background-image:
+    linear-gradient(
+      135deg,
+      rgba(12, 74, 160, 0.78) 0%,
+      rgba(13, 86, 182, 0.72) 48%,
+      rgba(31, 111, 211, 0.68) 100%
+    ),
+    url("/images/baduy.jpg") !important;
+
+  background-repeat: no-repeat, repeat !important;
+  background-size: cover, 120px auto !important;
+  background-position: center, center !important;
+
+  box-shadow:
+    0 12px 26px rgba(10, 63, 138, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+
+  transition: 0.2s ease;
+}
+
+.dropdown-logout-btn:hover {
+  transform: translateY(-1px);
+
+  background-color: #074a9a;
+  background-image:
+    linear-gradient(
+      135deg,
+      rgba(12, 74, 160, 0.78) 0%,
+      rgba(13, 86, 182, 0.72) 48%,
+      rgba(31, 111, 211, 0.68) 100%
+    ),
+    url("/images/baduy.jpg") !important;
+
+  box-shadow:
+    0 16px 32px rgba(10, 63, 138, 0.30),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+
+/* =========================================================
+   NAIKIN TEXT HERO ADMIN PROFILE
+========================================================= */
+
+.admin-hero-split .admin-hero-left-panel {
+  align-items: flex-start !important;
+}
+
+.admin-hero-split .admin-hero-left-panel > .container {
+  padding-top: 70px !important;
+  padding-left: 18px;
+}
+
+.admin-hero-split .admin-hero-copy {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
 }

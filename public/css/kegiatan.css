@@ -1,15 +1,89 @@
 /* =========================================================
-   KEGIATAN PAGE - MOOC BGTK BANTEN
-   Path: public/css/kegiatan.css
+   FONT & ROOT
 ========================================================= */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 
+:root {
+  --font-main: "Outfit", sans-serif;
+
+  --blue-900: #0a2f6b;
+  --blue-800: #0b3f8a;
+  --blue-700: #0d56b6;
+
+  --sky-50: #f3f7ff;
+  --ink: var(--blue-900);
+  --muted: #5b6474;
+  --line: #e6ebf4;
+
+  --danger: #b42318;
+  --danger-bg: #fff0f0;
+  --danger-line: #ffd0d0;
+
+  --success: #146c2e;
+  --success-bg: #e9fff1;
+  --success-line: #bff0ce;
+}
+
+.admin-kegiatan-page,
+.admin-kegiatan-page *,
+.save-modal,
+.save-modal *,
+.delete-modal,
+.delete-modal *,
+.required-popup,
+.required-popup *,
+.flatpickr-calendar,
+.flatpickr-calendar * {
+  font-family: var(--font-main) !important;
+}
+
+/* =========================================================
+   PAGE
+========================================================= */
 .admin-kegiatan-page {
   padding: 0 0 72px;
   background: linear-gradient(180deg, #ffffff 0%, var(--sky-50) 100%);
 }
 
 /* =========================================================
-   KEGIATAN HERO - BADUY BACKGROUND
+   BADUY BLUE BUTTON
+========================================================= */
+.admin-submit-btn,
+.kegiatan-link-box a,
+.modal-confirm-btn {
+  color: #ffffff !important;
+  background-color: #074a9a;
+  background-image:
+    linear-gradient(
+      135deg,
+      rgba(12, 74, 160, 0.78) 0%,
+      rgba(13, 86, 182, 0.72) 48%,
+      rgba(31, 111, 211, 0.68) 100%
+    ),
+    url("/images/baduy.jpg") !important;
+  background-repeat: no-repeat, repeat !important;
+  background-size: cover, 130px auto !important;
+  background-position: center, center !important;
+  border: none !important;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.admin-submit-btn:hover,
+.kegiatan-link-box a:hover,
+.modal-confirm-btn:hover {
+  background-image:
+    linear-gradient(
+      135deg,
+      rgba(7, 45, 105, 0.72) 0%,
+      rgba(10, 63, 138, 0.66) 48%,
+      rgba(13, 86, 182, 0.60) 100%
+    ),
+    url("/images/baduy.jpg") !important;
+}
+
+/* =========================================================
+   HERO
 ========================================================= */
 .kegiatan-hero {
   position: relative;
@@ -27,13 +101,6 @@
   background-repeat: no-repeat, repeat;
   background-size: cover, 230px auto;
   background-position: center, center;
-}
-
-/* hapus motif bulet-bulet / dekorasi lama */
-.kegiatan-hero::before,
-.kegiatan-hero::after {
-  display: none !important;
-  content: none !important;
 }
 
 .kegiatan-hero-inner {
@@ -57,7 +124,7 @@
   padding: 8px 15px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.16);
-  color: white;
+  color: #ffffff;
   font-size: 12px;
   font-weight: 900;
   letter-spacing: 0.4px;
@@ -67,7 +134,7 @@
 .kegiatan-hero-copy h1 {
   max-width: 680px;
   margin: 16px 0 14px;
-  color: white;
+  color: #ffffff;
   font-size: clamp(36px, 4.2vw, 58px);
   line-height: 1;
   letter-spacing: -1.5px;
@@ -103,7 +170,7 @@
 }
 
 .hero-main-btn {
-  background: white;
+  background: #ffffff;
   color: var(--blue-900);
   box-shadow: 0 16px 34px rgba(0, 0, 0, 0.14);
 }
@@ -113,7 +180,7 @@
 }
 
 .hero-outline-btn {
-  color: white;
+  color: #ffffff;
   background: rgba(255, 255, 255, 0.10);
   border: 1px solid rgba(255, 255, 255, 0.26);
   backdrop-filter: blur(10px);
@@ -130,8 +197,8 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;
-  margin-top: 26px;
   max-width: 760px;
+  margin-top: 26px;
 }
 
 .kegiatan-hero-stats div {
@@ -145,10 +212,10 @@
 
 .kegiatan-hero-stats strong {
   display: block;
-  color: white;
+  margin-bottom: 6px;
+  color: #ffffff;
   font-size: 24px;
   line-height: 1;
-  margin-bottom: 6px;
 }
 
 .kegiatan-hero-stats span {
@@ -160,19 +227,11 @@
 }
 
 /* =========================================================
-   HERO PANEL KANAN
+   HERO PANEL
 ========================================================= */
 .kegiatan-hero-panel {
   position: relative;
   min-height: 330px;
-}
-
-.hero-panel-glow {
-  position: absolute;
-  inset: 50px 30px 40px;
-  border-radius: 999px;
-  background: rgba(255, 214, 94, 0.20);
-  filter: blur(72px);
 }
 
 .hero-panel-card {
@@ -195,18 +254,18 @@
 
 .preview-card-top {
   display: flex;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 18px;
-  align-items: flex-start;
   margin-bottom: 20px;
 }
 
 .preview-card-top span {
   display: block;
+  margin-bottom: 6px;
   color: var(--muted);
   font-size: 12px;
   font-weight: 800;
-  margin-bottom: 6px;
 }
 
 .preview-card-top h3 {
@@ -217,12 +276,12 @@
 }
 
 .preview-icon {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
   width: 48px;
   height: 48px;
   border-radius: 16px;
-  display: grid;
-  place-items: center;
-  flex: 0 0 auto;
   background: radial-gradient(circle at top left, #ffffff, #dceaff);
   color: var(--blue-800);
   font-size: 21px;
@@ -232,10 +291,10 @@
 
 .preview-progress {
   padding: 15px;
+  margin-bottom: 14px;
   border-radius: 18px;
   background: var(--sky-50);
   border: 1px solid var(--line);
-  margin-bottom: 14px;
 }
 
 .preview-progress div:first-child {
@@ -257,7 +316,7 @@
   font-size: 14px;
 }
 
-.progress-bar {
+.admin-kegiatan-page .progress-bar {
   width: 100%;
   height: 10px;
   overflow: hidden;
@@ -265,7 +324,7 @@
   background: #dce8f8;
 }
 
-.progress-bar span {
+.admin-kegiatan-page .progress-bar span {
   display: block;
   width: 72%;
   height: 100%;
@@ -284,7 +343,7 @@
   gap: 11px;
   padding: 11px 13px;
   border-radius: 15px;
-  background: white;
+  background: #ffffff;
   border: 1px solid var(--line);
 }
 
@@ -296,10 +355,10 @@
 }
 
 .mini-dot {
+  flex: 0 0 auto;
   width: 12px;
   height: 12px;
   border-radius: 999px;
-  flex: 0 0 auto;
 }
 
 .mini-dot.webinar {
@@ -336,21 +395,16 @@
 }
 
 /* =========================================================
-   CARD GLOBAL
+   CARD
 ========================================================= */
 .admin-card {
-  background: white;
-  border: 1px solid var(--line);
-  border-radius: 24px;
   padding: 26px;
+  border-radius: 24px;
+  background: #ffffff;
+  border: 1px solid var(--line);
   box-shadow:
     0 26px 70px rgba(10, 47, 107, 0.20),
     0 10px 24px rgba(10, 47, 107, 0.10);
-}
-
-.admin-card h2 {
-  margin-top: 0;
-  color: var(--blue-900);
 }
 
 .section-heading.compact {
@@ -359,15 +413,15 @@
 
 .section-heading.compact h2 {
   margin: 0 0 6px;
-  font-size: 24px;
   color: var(--blue-900);
+  font-size: 24px;
 }
 
 .section-heading.compact p {
   margin: 0;
   color: var(--muted);
-  line-height: 1.8;
   font-size: 14px;
+  line-height: 1.8;
 }
 
 .card-kicker {
@@ -382,7 +436,7 @@
 }
 
 /* =========================================================
-   FORM KEGIATAN
+   FORM
 ========================================================= */
 .admin-form {
   display: grid;
@@ -406,6 +460,11 @@
   font-weight: 800;
 }
 
+.required-mark {
+  color: var(--danger);
+  font-weight: 900;
+}
+
 .form-group input,
 .form-group select,
 .form-group textarea {
@@ -413,11 +472,11 @@
   border: 1px solid var(--line);
   border-radius: 14px;
   padding: 13px 15px;
-  font-size: 14px;
   color: var(--ink);
-  outline: none;
-  background: white;
+  background: #ffffff;
   font-family: inherit;
+  font-size: 14px;
+  outline: none;
 }
 
 .form-group input,
@@ -433,12 +492,19 @@
 .form-group select:focus,
 .form-group textarea:focus {
   border-color: var(--blue-700);
-  box-shadow: 0 0 0 4px rgba(13, 86, 182, 0.1);
+  box-shadow: 0 0 0 4px rgba(13, 86, 182, 0.10);
 }
 
 .form-group input[readonly] {
   background: #f7f9fd;
   color: var(--muted);
+}
+
+.form-group.has-error input,
+.form-group.has-error select,
+.form-group.has-error textarea {
+  border-color: var(--danger) !important;
+  box-shadow: 0 0 0 4px rgba(180, 35, 24, 0.12) !important;
 }
 
 .form-help {
@@ -451,10 +517,7 @@
 .admin-submit-btn {
   width: 100%;
   height: 52px;
-  border: none;
   border-radius: 999px;
-  background: var(--blue-800);
-  color: white;
   font-size: 15px;
   font-weight: 800;
   cursor: pointer;
@@ -463,7 +526,6 @@
 }
 
 .admin-submit-btn:hover {
-  background: var(--blue-900);
   transform: translateY(-1px);
 }
 
@@ -479,15 +541,128 @@
 }
 
 .alert-success {
-  background: #e9fff1;
-  color: #146c2e;
-  border: 1px solid #bff0ce;
+  background: var(--success-bg);
+  color: var(--success);
+  border: 1px solid var(--success-line);
 }
 
 .alert-error {
-  background: #fff0f0;
-  color: #b42318;
-  border: 1px solid #ffd0d0;
+  background: var(--danger-bg);
+  color: var(--danger);
+  border: 1px solid var(--danger-line);
+}
+
+/* =========================================================
+   REQUIRED POPUP
+========================================================= */
+.required-popup[hidden] {
+  display: none !important;
+}
+
+.required-popup {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  z-index: 10000;
+  width: min(420px, calc(100% - 32px));
+  transform: translateX(-50%);
+}
+
+.required-popup-card {
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: var(--danger-bg);
+  color: var(--danger);
+  border: 1px solid var(--danger-line);
+  box-shadow: 0 18px 45px rgba(180, 35, 24, 0.18);
+  animation: requiredPop 0.2s ease;
+}
+
+.required-popup-card strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.required-popup-card p {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+@keyframes requiredPop {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* =========================================================
+   SEARCH KEGIATAN
+========================================================= */
+.kegiatan-search-box {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.kegiatan-search-box input {
+  width: 100%;
+  min-height: 46px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0 16px;
+  color: var(--ink);
+  background: #ffffff;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+}
+
+.kegiatan-search-box input:focus {
+  border-color: var(--blue-700);
+  box-shadow: 0 0 0 4px rgba(13, 86, 182, 0.10);
+}
+
+.kegiatan-search-box button {
+  min-height: 46px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1px solid var(--danger-line);
+  background: var(--danger-bg);
+  color: var(--danger);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.kegiatan-search-box button:hover {
+  background: #ffe3e3;
+  border-color: #ffb8b8;
+  color: #991b1b;
+  transform: translateY(-1px);
+}
+
+.kegiatan-search-empty {
+  margin-bottom: 16px;
+  padding: 18px;
+  text-align: center;
+  color: var(--muted);
+  border: 1px dashed var(--line);
+  border-radius: 18px;
+  background: var(--sky-50);
+  font-size: 14px;
+  font-weight: 700;
 }
 
 /* =========================================================
@@ -502,11 +677,11 @@
   display: grid;
   grid-template-columns: 180px 1fr;
   gap: 18px;
-  padding: 14px;
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  background: #fff;
   align-items: start;
+  padding: 14px;
+  border-radius: 20px;
+  background: #ffffff;
+  border: 1px solid var(--line);
   box-shadow: 0 12px 32px rgba(10, 47, 107, 0.10);
   transition: 0.2s ease;
 }
@@ -521,17 +696,17 @@
 .kegiatan-flayer-wrap {
   width: 180px;
   aspect-ratio: 4 / 5;
-  border-radius: 16px;
   overflow: hidden;
+  border-radius: 16px;
   background: var(--sky-50);
   border: 1px solid var(--line);
 }
 
 .kegiatan-flayer {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
 }
 
 .kegiatan-flayer-empty {
@@ -559,14 +734,14 @@
 .kegiatan-item-body p {
   margin: 0 0 12px;
   color: var(--muted);
-  line-height: 1.6;
   font-size: 14px;
+  line-height: 1.6;
 }
 
 .kegiatan-badges {
   display: flex;
-  gap: 8px;
   flex-wrap: wrap;
+  gap: 8px;
 }
 
 .kegiatan-badges span {
@@ -602,9 +777,9 @@
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 0 12px;
-  font-size: 12px;
   color: var(--muted);
   background: var(--sky-50);
+  font-size: 12px;
 }
 
 .kegiatan-link-box a {
@@ -614,15 +789,9 @@
   min-height: 40px;
   padding: 0 14px;
   border-radius: 12px;
-  background: var(--blue-800);
-  color: white;
   font-size: 13px;
   font-weight: 800;
   text-decoration: none;
-}
-
-.kegiatan-link-box a:hover {
-  background: var(--blue-900);
 }
 
 .empty-state {
@@ -641,21 +810,440 @@
 .delete-kegiatan-btn {
   width: 100%;
   min-height: 40px;
-  border: none;
   border-radius: 12px;
-  background: #fff0f0;
-  color: #b42318;
+  background: var(--danger-bg);
+  color: var(--danger);
+  font-family: inherit;
   font-size: 13px;
   font-weight: 800;
   cursor: pointer;
-  font-family: inherit;
-  border: 1px solid #ffd0d0;
+  border: 1px solid var(--danger-line);
   transition: 0.2s ease;
 }
 
 .delete-kegiatan-btn:hover {
-  background: #b42318;
-  color: white;
+  background: var(--danger);
+  color: #ffffff;
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+body.modal-open {
+  overflow: hidden;
+}
+
+.save-modal[hidden],
+.delete-modal[hidden] {
+  display: none !important;
+}
+
+.save-modal,
+.delete-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(7, 20, 45, 0.56);
+  backdrop-filter: blur(8px);
+}
+
+.modal-card {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 430px);
+  padding: 30px;
+  border-radius: 28px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  box-shadow:
+    0 34px 90px rgba(10, 47, 107, 0.28),
+    0 14px 34px rgba(10, 47, 107, 0.14);
+  text-align: center;
+  animation: modalPop 0.18s ease;
+}
+
+@keyframes modalPop {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-icon {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 18px;
+  border-radius: 999px;
+  font-size: 28px;
+  font-weight: 900;
+}
+
+.save-icon {
+  background: var(--success-bg);
+  color: var(--success);
+  border: 1px solid var(--success-line);
+}
+
+.delete-icon {
+  background: var(--danger-bg);
+  color: var(--danger);
+  border: 1px solid var(--danger-line);
+}
+
+.modal-card h2 {
+  margin: 0 0 10px;
+  color: var(--blue-900);
+  font-size: 28px;
+  line-height: 1.15;
+}
+
+.modal-card p {
+  max-width: 350px;
+  margin: 0 auto 16px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.modal-target {
+  margin: 0 auto 22px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: var(--sky-50);
+  border: 1px solid var(--line);
+  color: var(--blue-900);
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1.5;
+}
+
+.modal-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.modal-cancel-btn,
+.modal-confirm-btn {
+  min-height: 48px;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.modal-cancel-btn {
+  border: 1px solid var(--danger-line);
+  background: var(--danger-bg);
+  color: var(--danger);
+  box-shadow: 0 10px 24px rgba(180, 35, 24, 0.10);
+}
+
+.modal-cancel-btn:hover {
+  background: #ffe3e3;
+  border-color: #ffb8b8;
+  color: #991b1b;
+  transform: translateY(-1px);
+}
+
+.modal-confirm-btn {
+  box-shadow:
+    0 14px 30px rgba(10, 63, 138, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+
+.modal-confirm-btn:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 18px 36px rgba(10, 63, 138, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.modal-confirm-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.75;
+  transform: none;
+}
+
+/* =========================================================
+   FLATPICKR BASE
+========================================================= */
+.datetime-picker,
+.flatpickr-input {
+  cursor: pointer;
+}
+
+.flatpickr-input[readonly] {
+  background: #ffffff !important;
+  color: var(--ink) !important;
+}
+
+.form-group input.datetime-picker {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%) !important;
+}
+
+.flatpickr-calendar {
+  overflow: hidden !important;
+  border: 1px solid rgba(13, 86, 182, 0.16) !important;
+  border-radius: 22px !important;
+  box-shadow:
+    0 28px 70px rgba(10, 47, 107, 0.22),
+    0 10px 24px rgba(10, 47, 107, 0.10) !important;
+}
+
+.flatpickr-calendar::before,
+.flatpickr-calendar::after {
+  display: none !important;
+}
+
+.flatpickr-months {
+  padding: 10px 8px;
+  background-color: #074a9a;
+  background-image:
+    linear-gradient(
+      135deg,
+      rgba(12, 74, 160, 0.78) 0%,
+      rgba(13, 86, 182, 0.72) 48%,
+      rgba(31, 111, 211, 0.68) 100%
+    ),
+    url("/images/baduy.jpg");
+  background-repeat: no-repeat, repeat;
+  background-size: cover, 120px auto;
+  background-position: center, center;
+}
+
+.flatpickr-month,
+.flatpickr-current-month,
+.flatpickr-current-month input.cur-year,
+.flatpickr-current-month .flatpickr-monthDropdown-months {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
+
+.flatpickr-current-month {
+  font-size: 16px !important;
+  font-weight: 900 !important;
+}
+
+.flatpickr-current-month input.cur-year,
+.flatpickr-current-month .flatpickr-monthDropdown-months {
+  font-weight: 900 !important;
+}
+
+.flatpickr-current-month .flatpickr-monthDropdown-months {
+  background: transparent !important;
+}
+
+.flatpickr-prev-month,
+.flatpickr-next-month {
+  top: 12px !important;
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
+
+.flatpickr-prev-month:hover svg,
+.flatpickr-next-month:hover svg {
+  fill: #dceaff !important;
+}
+
+.flatpickr-weekdays {
+  background: var(--sky-50) !important;
+  border-bottom: 1px solid var(--line);
+}
+
+span.flatpickr-weekday {
+  color: var(--blue-900) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+}
+
+.flatpickr-days {
+  background: #ffffff;
+}
+
+.flatpickr-day {
+  color: var(--blue-900) !important;
+  border-radius: 12px !important;
+  font-weight: 700 !important;
+}
+
+.flatpickr-day:hover {
+  background: #e7f0ff !important;
+  border-color: #e7f0ff !important;
+}
+
+.flatpickr-day.today {
+  border-color: var(--blue-700) !important;
+  color: var(--blue-900) !important;
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange {
+  background-color: #074a9a !important;
+  border-color: #074a9a !important;
+  color: #ffffff !important;
+  font-weight: 900 !important;
+}
+
+.flatpickr-day.prevMonthDay,
+.flatpickr-day.nextMonthDay {
+  color: #9aa6ba !important;
+}
+
+/* =========================================================
+   FLATPICKR TIME
+========================================================= */
+.flatpickr-time {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  height: auto !important;
+  min-height: 102px !important;
+  padding: 16px 12px 18px !important;
+  overflow: visible !important;
+  box-sizing: border-box !important;
+  background: var(--sky-50) !important;
+  border-top: 1px solid var(--line) !important;
+}
+
+.flatpickr-time .numInputWrapper {
+  position: relative !important;
+  flex: 0 0 76px !important;
+  width: 76px !important;
+  height: auto !important;
+  padding-top: 24px !important;
+  margin: 0 !important;
+  overflow: visible !important;
+}
+
+.flatpickr-time .numInputWrapper:first-child::before {
+  content: "JAM";
+}
+
+.flatpickr-time .flatpickr-time-separator + .numInputWrapper::before {
+  content: "MENIT";
+}
+
+.flatpickr-time .numInputWrapper::before,
+.flatpickr-time .flatpickr-am-pm::before {
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 16px !important;
+  line-height: 16px !important;
+  color: var(--muted) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  text-align: center !important;
+  letter-spacing: 0.5px !important;
+}
+
+.flatpickr-time .numInputWrapper::before {
+  top: 0 !important;
+}
+
+.flatpickr-time input {
+  width: 100% !important;
+  height: 50px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 1px solid rgba(13, 86, 182, 0.16) !important;
+  border-radius: 18px !important;
+  background: #ffffff !important;
+  color: var(--blue-900) !important;
+  font-size: 22px !important;
+  font-weight: 900 !important;
+  line-height: 50px !important;
+  text-align: center !important;
+  box-shadow: 0 10px 24px rgba(10, 47, 107, 0.08) !important;
+}
+
+.flatpickr-time input:hover,
+.flatpickr-time .flatpickr-am-pm:hover {
+  background: #e7f0ff !important;
+}
+
+.flatpickr-time input:focus {
+  border-color: var(--blue-700) !important;
+  box-shadow:
+    0 0 0 4px rgba(13, 86, 182, 0.12),
+    0 10px 24px rgba(10, 47, 107, 0.08) !important;
+}
+
+.flatpickr-time .flatpickr-time-separator {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 12px !important;
+  height: 50px !important;
+  padding: 0 !important;
+  margin: 24px 0 0 !important;
+  color: var(--blue-900) !important;
+  font-size: 28px !important;
+  font-weight: 900 !important;
+  line-height: 50px !important;
+}
+
+.flatpickr-time .flatpickr-am-pm {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 72px !important;
+  width: 72px !important;
+  height: 50px !important;
+  margin: 24px 0 0 !important;
+  padding: 0 !important;
+  border: 1px solid rgba(13, 86, 182, 0.16) !important;
+  border-radius: 18px !important;
+  background: #ffffff !important;
+  color: var(--blue-900) !important;
+  font-size: 20px !important;
+  font-weight: 900 !important;
+  line-height: 50px !important;
+  text-align: center !important;
+  box-shadow: 0 10px 24px rgba(10, 47, 107, 0.08) !important;
+  cursor: pointer !important;
+}
+
+.flatpickr-time .flatpickr-am-pm::before {
+  content: "FORMAT";
+  top: -24px !important;
+}
+
+.flatpickr-time .numInputWrapper span.arrowUp,
+.flatpickr-time .numInputWrapper span.arrowDown {
+  display: none !important;
+}
+
+.flatpickr-time input[type="number"] {
+  appearance: textfield !important;
+  -moz-appearance: textfield !important;
+}
+
+.flatpickr-time input[type="number"]::-webkit-outer-spin-button,
+.flatpickr-time input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
 }
 
 /* =========================================================
@@ -678,14 +1266,6 @@
   .main-preview-card {
     max-width: 420px;
     margin-left: 0;
-  }
-
-  .kegiatan-item {
-    grid-template-columns: 180px 1fr;
-  }
-
-  .kegiatan-flayer-wrap {
-    width: 180px;
   }
 }
 
@@ -728,8 +1308,13 @@
 @media (max-width: 640px) {
   .form-row,
   .kegiatan-link-box,
+  .kegiatan-search-box,
   .kegiatan-hero-stats {
     grid-template-columns: 1fr;
+  }
+
+  .kegiatan-search-box button {
+    width: 100%;
   }
 
   .kegiatan-item {
@@ -769,4 +1354,170 @@
   .preview-card-top h3 {
     font-size: 23px;
   }
+
+  .modal-card {
+    padding: 24px;
+    border-radius: 24px;
+  }
+
+  .modal-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-card h2 {
+    font-size: 24px;
+  }
+
+  .flatpickr-time {
+    gap: 6px !important;
+    padding: 14px 8px 16px !important;
+  }
+
+  .flatpickr-time .numInputWrapper {
+    width: 68px !important;
+    flex-basis: 68px !important;
+  }
+
+  .flatpickr-time input {
+    height: 48px !important;
+    font-size: 20px !important;
+    line-height: 48px !important;
+  }
+
+  .flatpickr-time .flatpickr-time-separator {
+    height: 48px !important;
+    font-size: 24px !important;
+    line-height: 48px !important;
+  }
+
+  .flatpickr-time .flatpickr-am-pm {
+    width: 64px !important;
+    flex-basis: 64px !important;
+    height: 48px !important;
+    font-size: 17px !important;
+    line-height: 48px !important;
+  }
 }
+
+/* ================================
+   FIX HORIZONTAL SCROLL ADMIN PAGE
+================================ */
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.admin-profile-page {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.admin-hero-split,
+.admin-profile-content-wrap,
+.profile-stats-row,
+.profile-app-grid,
+.profile-purpose-section {
+  max-width: 100%;
+  min-width: 0;
+}
+
+.admin-hero-left-panel,
+.admin-hero-right-panel,
+.profile-stat-card,
+.profile-app-card,
+.purpose-item {
+  min-width: 0;
+}
+
+.hero-split-image {
+  display: block;
+  max-width: 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* =========================================================
+   ADMIN KEGIATAN MOBILE - BUTTON KECIL + STATS NYAMPING
+========================================================= */
+
+@media (max-width: 768px) {
+  /* tombol Tambah Kegiatan & Lihat Data biar kecil dan nyamping */
+  .admin-kegiatan-page .kegiatan-hero-actions {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+    margin-top: 18px !important;
+  }
+
+  .admin-kegiatan-page .kegiatan-hero-actions .hero-main-btn,
+  .admin-kegiatan-page .kegiatan-hero-actions .hero-outline-btn {
+    width: 100% !important;
+    min-height: 38px !important;
+    padding: 0 12px !important;
+    border-radius: 999px !important;
+    font-size: 12px !important;
+    font-weight: 900 !important;
+  }
+
+  /* stats 4 card jadi nyamping */
+  .admin-kegiatan-page .kegiatan-hero-stats {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    margin-top: 18px !important;
+    max-width: 100% !important;
+  }
+
+  .admin-kegiatan-page .kegiatan-hero-stats div {
+    min-width: 0 !important;
+    padding: 11px 7px !important;
+    border-radius: 14px !important;
+  }
+
+  .admin-kegiatan-page .kegiatan-hero-stats strong {
+    margin-bottom: 4px !important;
+    font-size: 20px !important;
+    line-height: 1 !important;
+  }
+
+  .admin-kegiatan-page .kegiatan-hero-stats span {
+    display: block !important;
+    font-size: 8.5px !important;
+    line-height: 1.2 !important;
+    font-weight: 800 !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .admin-kegiatan-page .kegiatan-hero-actions {
+    gap: 8px !important;
+  }
+
+  .admin-kegiatan-page .kegiatan-hero-actions .hero-main-btn,
+  .admin-kegiatan-page .kegiatan-hero-actions .hero-outline-btn {
+    min-height: 36px !important;
+    font-size: 11.5px !important;
+  }
+
+  .admin-kegiatan-page .kegiatan-hero-stats {
+    gap: 6px !important;
+  }
+
+  .admin-kegiatan-page .kegiatan-hero-stats div {
+    padding: 10px 5px !important;
+    border-radius: 13px !important;
+  }
+
+  .admin-kegiatan-page .kegiatan-hero-stats strong {
+    font-size: 18px !important;
+  }
+
+  .admin-kegiatan-page .kegiatan-hero-stats span {
+    font-size: 7.8px !important;
+  }
+}
+
