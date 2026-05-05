@@ -31,8 +31,8 @@
 
         <p>
           Tambahkan webinar, pelatihan, dan konsultasi dalam satu dashboard.
-          Data kegiatan, flayer, kuota, jadwal, dan link pendaftaran dapat
-          dikelola lebih rapi, cepat, dan terpusat.
+          Data kegiatan, flayer, kuota, jadwal, link pendaftaran, Zoom,
+          Moodle, dan lokasi dapat dikelola lebih rapi dan terpusat.
         </p>
 
         <div class="kegiatan-hero-actions">
@@ -199,6 +199,52 @@
             </div>
           </div>
 
+<div class="form-row">
+  <div class="form-group" id="jenisPelatihanGroup">
+    <label for="jenis_pelatihan">
+      Jenis Pelatihan
+    </label>
+
+    <select id="jenis_pelatihan" name="jenis_pelatihan">
+      <option value="" {{ old('jenis_pelatihan') ? '' : 'selected' }}>
+        Pilih jenis pelatihan
+      </option>
+
+      <option value="terbimbing" {{ old('jenis_pelatihan') == 'terbimbing' ? 'selected' : '' }}>
+        Terbimbing
+      </option>
+
+      <option value="mandiri" {{ old('jenis_pelatihan') == 'mandiri' ? 'selected' : '' }}>
+        Mandiri
+      </option>
+    </select>
+
+    <small class="form-help">
+      Bisa dipilih untuk webinar, pelatihan, maupun konsultasi.
+    </small>
+  </div>
+
+  <div class="form-group">
+    <label for="perlu_pendaftaran">
+      Perlu Isi Pendaftaran?
+    </label>
+
+    <select id="perlu_pendaftaran" name="perlu_pendaftaran">
+      <option value="1" {{ old('perlu_pendaftaran', '1') == '1' ? 'selected' : '' }}>
+        Ya, perlu pendaftaran
+      </option>
+
+      <option value="0" {{ old('perlu_pendaftaran') == '0' ? 'selected' : '' }}>
+        Tidak perlu pendaftaran
+      </option>
+    </select>
+
+    <small class="form-help">
+      Terbimbing otomatis perlu daftar. Mandiri otomatis tidak perlu.
+    </small>
+  </div>
+</div>
+
           <div class="form-group">
             <label for="nama_kegiatan">
               Nama Kegiatan <span class="required-mark">*</span>
@@ -217,7 +263,7 @@
           <div class="form-row">
             <div class="form-group">
               <label for="fasil">
-                Fasil <span class="required-mark">*</span>
+                Fasilitator <span class="required-mark">*</span>
               </label>
 
               <input
@@ -263,19 +309,19 @@
             >
           </div>
 
-          <div class="form-group">
-            <label for="deskripsi">
-              Deskripsi <span class="required-mark">*</span>
-            </label>
+<div class="form-group">
+  <label for="deskripsi">
+    Deskripsi <span class="required-mark">*</span>
+  </label>
 
-            <textarea
-              id="deskripsi"
-              name="deskripsi"
-              rows="4"
-              placeholder="Tulis deskripsi kegiatan..."
-              required
-            >{{ old('deskripsi') }}</textarea>
-          </div>
+  <textarea
+    id="deskripsi"
+    name="deskripsi"
+    rows="4"
+    placeholder="Tulis deskripsi kegiatan..."
+    required
+  >{{ old('deskripsi') }}</textarea>
+</div>
 
           <div class="form-group">
             <label for="link_zoom">
@@ -292,22 +338,41 @@
           </div>
 
           <div class="form-group">
-            <label for="flayer">
-              Flayer <span class="required-mark">*</span>
+            <label for="moodle_course_url">
+              Link Course Moodle
             </label>
 
             <input
-              type="file"
-              id="flayer"
-              name="flayer"
-              accept="image/*"
-              required
+              type="text"
+              id="moodle_course_url"
+              name="moodle_course_url"
+              value="{{ old('moodle_course_url') }}"
+              placeholder="https://moodle.example.com/course/view.php?id=..."
             >
 
             <small class="form-help">
-              Gunakan gambar poster/flayer kegiatan agar tampilan publikasi lebih menarik.
+              Untuk pelatihan mandiri atau pelatihan terbimbing setelah admin inject peserta.
             </small>
           </div>
+
+
+<div class="form-group">
+  <label for="flayer">
+    Flayer <span class="required-mark">*</span>
+  </label>
+
+  <input
+    type="file"
+    id="flayer"
+    name="flayer"
+    accept="image/*"
+    required
+  >
+
+  <small class="form-help">
+    Flayer yang akan di upload wajib memiliki ukuran <b>1080x1350</b>.
+  </small>
+</div>
 
           <div class="form-group">
             <label>Link Pendaftaran</label>
@@ -376,6 +441,12 @@
                 <div class="kegiatan-badges">
                   <span>{{ ucfirst($item->jenis_kegiatan) }}</span>
                   <span>{{ ucfirst($item->moda) }}</span>
+
+                  @if($item->jenis_kegiatan === 'pelatihan' && $item->jenis_pelatihan)
+                    <span>{{ ucfirst($item->jenis_pelatihan) }}</span>
+                  @endif
+
+                  <span>{{ $item->perlu_pendaftaran ? 'Perlu Daftar' : 'Tanpa Daftar' }}</span>
                 </div>
 
                 <h3>{{ $item->nama_kegiatan }}</h3>
@@ -391,6 +462,10 @@
                     Waktu:
                     {{ \Carbon\Carbon::parse($item->waktu_pelaksanaan)->format('d M Y H:i') }}
                   </small>
+
+                  @if($item->moodle_course_url)
+                    <small>Moodle: tersedia</small>
+                  @endif
                 </div>
 
                 <div class="kegiatan-link-box">
@@ -400,6 +475,13 @@
                     Buka
                   </a>
                 </div>
+
+                <a
+                  href="{{ route('admin.kegiatan.edit', $item->id) }}"
+                  class="edit-kegiatan-btn"
+                >
+                  Edit Kegiatan
+                </a>
 
                 <form
                   action="{{ route('admin.kegiatan.destroy', $item->id) }}"
@@ -414,6 +496,46 @@
                     Hapus Kegiatan
                   </button>
                 </form>
+
+                @if($item->jenis_pelatihan === 'terbimbing')
+                  @php
+                    $totalPeserta = $item->kelas_count ?? $item->kelas()->count();
+
+                    $totalInjected = $item->kelas()
+                      ->whereNotNull('moodle_injected_at')
+                      ->count();
+                  @endphp
+
+                  <div class="moodle-inject-status">
+                    <span>
+                      Moodle:
+                      <strong>{{ $totalInjected }}/{{ $totalPeserta }}</strong>
+                      peserta aktif
+                    </span>
+                  </div>
+
+                  <form
+                    action="{{ route('admin.kegiatan.moodle.injected', $item->id) }}"
+                    method="POST"
+                    class="inject-kegiatan-form"
+                  >
+                    @csrf
+
+                    <button
+                      type="submit"
+                      class="inject-kegiatan-btn"
+                      {{ empty($item->moodle_course_url) ? 'disabled' : '' }}
+                    >
+                      Sudah di Inject
+                    </button>
+
+                    @if(empty($item->moodle_course_url))
+                      <small class="inject-help">
+                        Isi Link Course Moodle dulu.
+                      </small>
+                    @endif
+                  </form>
+                @endif
               </div>
             </article>
           @empty
@@ -535,6 +657,38 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
+    const jenisPelatihan = document.getElementById('jenis_pelatihan');
+    const perluPendaftaran = document.getElementById('perlu_pendaftaran');
+
+    if (!jenisPelatihan || !perluPendaftaran) {
+      return;
+    }
+
+    function syncJenisPelatihan() {
+      const pelatihan = jenisPelatihan.value;
+
+      /*
+        Jenis Pelatihan bebas dipilih untuk semua jenis kegiatan.
+        Tidak mengubah Jenis Kegiatan.
+      */
+
+      if (pelatihan === 'terbimbing') {
+        perluPendaftaran.value = '1';
+      }
+
+      if (pelatihan === 'mandiri') {
+        perluPendaftaran.value = '0';
+      }
+    }
+
+    jenisPelatihan.addEventListener('change', syncJenisPelatihan);
+
+    syncJenisPelatihan();
+  });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
     const searchInput = document.getElementById('searchKegiatanInput');
     const resetButton = document.getElementById('resetSearchKegiatan');
     const emptySearch = document.getElementById('searchKegiatanEmpty');
@@ -630,7 +784,7 @@
       }
 
       if (field.type === 'file') {
-        return !field.files || field.files.length === 0;
+        return false;
       }
 
       return String(field.value || '').trim() === '';

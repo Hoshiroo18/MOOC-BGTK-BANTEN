@@ -6,14 +6,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\KegiatanController;
 use App\Http\Controllers\PublicDashboardController;
+use App\Http\Controllers\PendaftaranKegiatanController;
+use App\Http\Controllers\KelasController;
 
-Route::get('/', function () {
-    return view('dashboard');
-});
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-});
+Route::get('/', [PublicDashboardController::class, 'index']);
+Route::get('/dashboard', [PublicDashboardController::class, 'index'])->name('dashboard');
 
 Route::get('/login', function () {
     return view('auth.login');
@@ -28,7 +25,13 @@ Route::post('/login', function (Request $request) {
     if (Auth::attempt($credentials, $request->boolean('remember'))) {
         $request->session()->regenerate();
 
-        return redirect()->intended('/admin/dashboard');
+        $user = Auth::user();
+
+        if ($user->role === 'admin') {
+            return redirect()->intended('/admin/dashboard');
+        }
+
+        return redirect()->intended('/kelas');
     }
 
     return back()
@@ -44,55 +47,65 @@ Route::post('/logout', function (Request $request) {
     $request->session()->invalidate();
     $request->session()->regenerateToken();
 
-    return redirect('/login');
+    return redirect('/dashboard');
 })->name('logout');
 
-Route::get('/admin/dashboard', [DashboardController::class, 'index'])
+Route::get('/daftar-kegiatan/{slug}', [PendaftaranKegiatanController::class, 'create'])
+    ->name('kegiatan.daftar');
+
+Route::post('/daftar-kegiatan/{slug}', [PendaftaranKegiatanController::class, 'store'])
+    ->name('kegiatan.daftar.store');
+
+Route::get('/pendaftaran-berhasil/{kelas}', [PendaftaranKegiatanController::class, 'success'])
+    ->name('kegiatan.daftar.success');
+
+Route::get('/kelas', [KelasController::class, 'index'])
     ->middleware('auth')
-    ->name('admin.dashboard');
-
-Route::post('/admin/courses', [DashboardController::class, 'storeCourse'])
-    ->middleware('auth')
-    ->name('admin.courses.store');
-Route::get('/admin/courses', function () {
-    return 'Halaman Kelola Kelas Admin';
-})->middleware('auth')->name('admin.courses.index');
-
-Route::get('/admin/users', function () {
-    return 'Halaman Kelola User Admin';
-})->middleware('auth')->name('admin.users.index');
-
-Route::get('/admin/certificates', function () {
-    return 'Halaman Sertifikat Admin';
-})->middleware('auth')->name('admin.certificates.index');
-
-Route::get('/kelas', function () {
-    return 'Halaman Kelas Publik';
-})->name('kelas.index');
+    ->name('kelas.index');
 
 Route::get('/sertifikat', function () {
     return 'Halaman Sertifikat Publik';
 })->name('sertifikat.index');
 
-Route::get('/bantuan', function () {
-    return 'Halaman Bantuan Publik';
-})->name('bantuan.index');
+Route::view('/bantuan', 'bantuan')->name('bantuan.index');
 
-Route::get('/admin/kegiatan', [KegiatanController::class, 'index'])
-    ->middleware('auth')
-    ->name('admin.kegiatan.index');
+Route::middleware('auth')->group(function () {
+    Route::get('/admin/dashboard', [DashboardController::class, 'index'])
+        ->name('admin.dashboard');
 
-Route::post('/admin/kegiatan', [KegiatanController::class, 'store'])
-    ->middleware('auth')
-    ->name('admin.kegiatan.store');
+    Route::get('/admin/kegiatan', [KegiatanController::class, 'index'])
+        ->name('admin.kegiatan.index');
 
-Route::get('/daftar-kegiatan/{slug}', function ($slug) {
-    return 'Halaman pendaftaran untuk kegiatan: ' . $slug;
-})->name('kegiatan.daftar');
+    Route::post('/admin/kegiatan', [KegiatanController::class, 'store'])
+        ->name('admin.kegiatan.store');
 
-Route::delete('/admin/kegiatan/{kegiatan}', [KegiatanController::class, 'destroy'])
-    ->middleware('auth')
-    ->name('admin.kegiatan.destroy');
+    Route::get('/admin/kegiatan/{kegiatan}/edit', [KegiatanController::class, 'edit'])
+        ->name('admin.kegiatan.edit');
 
-Route::get('/dashboard', [PublicDashboardController::class, 'index'])
-    ->name('dashboard');
+    Route::put('/admin/kegiatan/{kegiatan}', [KegiatanController::class, 'update'])
+        ->name('admin.kegiatan.update');
+
+    Route::post('/admin/kegiatan/{kegiatan}/moodle-injected', [KegiatanController::class, 'markMoodleInjected'])
+        ->name('admin.kegiatan.moodle.injected');
+
+    Route::delete('/admin/kegiatan/{kegiatan}', [KegiatanController::class, 'destroy'])
+        ->name('admin.kegiatan.destroy');
+
+    Route::post('/admin/courses', [DashboardController::class, 'storeCourse'])
+        ->name('admin.courses.store');
+
+    Route::get('/admin/courses', function () {
+        abort_if(auth()->user()->role !== 'admin', 403);
+        return 'Halaman Kelola Kelas Admin';
+    })->name('admin.courses.index');
+
+    Route::get('/admin/users', function () {
+        abort_if(auth()->user()->role !== 'admin', 403);
+        return 'Halaman Kelola User Admin';
+    })->name('admin.users.index');
+
+    Route::get('/admin/certificates', function () {
+        abort_if(auth()->user()->role !== 'admin', 403);
+        return 'Halaman Sertifikat Admin';
+    })->name('admin.certificates.index');
+});

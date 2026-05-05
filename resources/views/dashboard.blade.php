@@ -30,16 +30,7 @@
       ? asset('storage/' . $item->flayer)
       : asset('images/baduy.jpg');
 
-    /*
-      Field lokasi dan Moodle ini aman walaupun belum ada di tabel.
-      Kalau nanti admin form ditambah kolom lokasi/link_moodle, otomatis kebaca.
-    */
-    $lokasi = $item->lokasi
-      ?? $item->tempat_kegiatan
-      ?? $item->alamat_kegiatan
-      ?? '';
-
-    $moodleLink = $item->link_moodle
+    $moodleLink = $item->moodle_course_url
       ?? $item->moodle_url
       ?? $item->course_url
       ?? '';
@@ -63,9 +54,10 @@
       'flayer' => $flayerUrl,
       'link_pendaftaran' => $item->link_pendaftaran ?? '',
       'link_zoom' => $item->link_zoom ?? '',
-      'lokasi' => $lokasi,
       'moodle_link' => $moodleLink,
       'course_name' => $courseName,
+      'jenis_pelatihan' => $item->jenis_pelatihan ?? '',
+      'perlu_pendaftaran' => (bool) ($item->perlu_pendaftaran ?? false),
     ];
   });
 @endphp
@@ -159,13 +151,19 @@
     <div class="flow-card">
       <span>02</span>
       <h3>Isi Pendaftaran</h3>
-      <p>Klik detail kegiatan, lalu isi link pendaftaran yang disediakan.</p>
+      <p>
+        Jika kegiatan membutuhkan pendaftaran, klik tombol Isi Pendaftaran
+        dan lengkapi data peserta.
+      </p>
     </div>
 
     <div class="flow-card">
       <span>03</span>
       <h3>Akses Pembelajaran</h3>
-      <p>Ikuti kegiatan melalui Zoom, lokasi luring, atau course Moodle.</p>
+      <p>
+        Ikuti kegiatan melalui Zoom, lokasi luring, atau course Moodle sesuai
+        pengaturan admin.
+      </p>
     </div>
   </section>
 
@@ -192,12 +190,23 @@
         autocomplete="off"
       >
 
-      <select id="jenisFilter">
-        <option value="">Semua Jenis</option>
-        <option value="webinar">Webinar</option>
-        <option value="pelatihan">Pelatihan</option>
-        <option value="konsultasi">Konsultasi</option>
-      </select>
+      <div class="jenis-filter-buttons" id="jenisFilterButtons">
+        <button type="button" class="jenis-filter-btn is-active" data-jenis="">
+          Semua
+        </button>
+
+        <button type="button" class="jenis-filter-btn" data-jenis="konsultasi">
+          Konsultasi
+        </button>
+
+        <button type="button" class="jenis-filter-btn" data-jenis="webinar">
+          Webinar
+        </button>
+
+        <button type="button" class="jenis-filter-btn" data-jenis="pelatihan">
+          Pelatihan
+        </button>
+      </div>
 
       <select id="modaFilter">
         <option value="">Semua Moda</option>
@@ -242,6 +251,10 @@
             <div class="course-tags">
               <span>{{ $card['jenis'] }}</span>
               <span>{{ $card['moda'] }}</span>
+
+              @if($card['jenis_raw'] === 'pelatihan' && $card['jenis_pelatihan'])
+                <span>{{ ucfirst($card['jenis_pelatihan']) }}</span>
+              @endif
             </div>
 
             <h3>{{ $card['title'] }}</h3>
@@ -289,6 +302,7 @@
         <div class="modal-badges">
           <span id="modalJenis">Jenis</span>
           <span id="modalModa">Moda</span>
+          <span id="modalJenisPelatihan" hidden>Jenis Pelatihan</span>
         </div>
 
         <h2 id="modalTitle">Judul Kegiatan</h2>
@@ -328,14 +342,7 @@
             </a>
           </div>
 
-          <div class="access-item" id="lokasiAccessBox" hidden>
-            <div>
-              <strong>Lokasi Kegiatan</strong>
-              <p id="modalLokasi">Lokasi akan diinformasikan oleh admin.</p>
-            </div>
-          </div>
-
-          <div class="access-item">
+          <div class="access-item" id="moodleAccessBox">
             <div>
               <strong>Course Moodle</strong>
               <p id="modalCourseName">Course Moodle yang terhubung dengan kegiatan ini.</p>
@@ -348,7 +355,7 @@
         </div>
 
         <div class="modal-actions">
-          <a href="#" target="_blank" rel="noopener" class="register-btn" id="modalRegisterLink">
+          <a href="#" class="register-btn" id="modalRegisterLink">
             Isi Pendaftaran
           </a>
 
@@ -370,16 +377,16 @@
     const modalImage = document.getElementById('modalImage');
     const modalJenis = document.getElementById('modalJenis');
     const modalModa = document.getElementById('modalModa');
+    const modalJenisPelatihan = document.getElementById('modalJenisPelatihan');
     const modalTitle = document.getElementById('modalTitle');
     const modalDescription = document.getElementById('modalDescription');
     const modalFasil = document.getElementById('modalFasil');
     const modalKuota = document.getElementById('modalKuota');
     const modalWaktu = document.getElementById('modalWaktu');
-    const modalLokasi = document.getElementById('modalLokasi');
     const modalCourseName = document.getElementById('modalCourseName');
 
     const zoomBox = document.getElementById('zoomAccessBox');
-    const lokasiBox = document.getElementById('lokasiAccessBox');
+    const moodleBox = document.getElementById('moodleAccessBox');
 
     const modalZoomLink = document.getElementById('modalZoomLink');
     const modalMoodleLink = document.getElementById('modalMoodleLink');
@@ -389,10 +396,12 @@
     const closeButtons = document.querySelectorAll('[data-close-modal]');
 
     const searchInput = document.getElementById('courseSearch');
-    const jenisFilter = document.getElementById('jenisFilter');
+    const jenisButtons = document.querySelectorAll('.jenis-filter-btn');
     const modaFilter = document.getElementById('modaFilter');
     const resetButton = document.getElementById('resetCourseFilter');
     const emptyFilter = document.getElementById('courseEmptyFilter');
+
+    let selectedJenis = '';
 
     function getItemById(id) {
       return kegiatanData.find(function (item) {
@@ -401,6 +410,10 @@
     }
 
     function setLink(element, url, activeText) {
+      if (!element) {
+        return;
+      }
+
       if (url && String(url).trim() !== '') {
         element.href = url;
         element.classList.remove('is-disabled');
@@ -417,6 +430,18 @@
         return;
       }
 
+      const jenisRaw = String(item.jenis_raw || '').toLowerCase();
+      const modaRaw = String(item.moda_raw || '').toLowerCase();
+      const jenisPelatihan = String(item.jenis_pelatihan || '').toLowerCase();
+
+      const isKonsultasi = jenisRaw === 'konsultasi';
+      const isPelatihan = jenisRaw === 'pelatihan';
+      const isTerbimbing = isPelatihan && jenisPelatihan === 'terbimbing';
+
+      const perluPendaftaran = item.perlu_pendaftaran === true
+        || item.perlu_pendaftaran === 1
+        || item.perlu_pendaftaran === '1';
+
       modalImage.src = item.flayer;
       modalImage.alt = item.title;
 
@@ -428,23 +453,61 @@
       modalKuota.textContent = item.kuota || '-';
       modalWaktu.textContent = item.waktu || '-';
 
-      const moda = String(item.moda_raw || '').toLowerCase();
+      if (modalJenisPelatihan) {
+        if (isPelatihan && jenisPelatihan !== '') {
+          modalJenisPelatihan.hidden = false;
+          modalJenisPelatihan.textContent = jenisPelatihan.charAt(0).toUpperCase() + jenisPelatihan.slice(1);
+        } else {
+          modalJenisPelatihan.hidden = true;
+          modalJenisPelatihan.textContent = '';
+        }
+      }
 
-      zoomBox.hidden = !(moda === 'daring' || moda === 'hybrid');
-      lokasiBox.hidden = !(moda === 'luring' || moda === 'hybrid');
-
-      modalLokasi.textContent = item.lokasi || 'Lokasi akan diinformasikan oleh admin.';
-      modalCourseName.textContent = item.course_name || 'Course Moodle';
+      if (zoomBox) {
+        zoomBox.hidden = !(modaRaw === 'daring' || modaRaw === 'hybrid');
+      }
 
       setLink(modalZoomLink, item.link_zoom, 'Buka Zoom');
-      setLink(modalMoodleLink, item.moodle_link, 'Buka Moodle');
-      setLink(modalRegisterLink, item.link_pendaftaran, 'Isi Pendaftaran');
+
+      if (isKonsultasi) {
+        if (moodleBox) {
+          moodleBox.hidden = true;
+        }
+      } else {
+        if (moodleBox) {
+          moodleBox.hidden = false;
+        }
+
+        if (isTerbimbing) {
+          setLink(modalMoodleLink, '', 'Belum tersedia');
+          modalCourseName.textContent = 'Link Moodle aktif setelah admin menyetujui peserta.';
+        } else {
+          setLink(modalMoodleLink, item.moodle_link, 'Buka Moodle');
+          modalCourseName.textContent = item.course_name || 'Course Moodle';
+        }
+      }
+
+      if (perluPendaftaran) {
+        modalRegisterLink.hidden = false;
+        modalRegisterLink.href = item.link_pendaftaran || '#';
+        modalRegisterLink.classList.toggle('is-disabled', !item.link_pendaftaran);
+        modalRegisterLink.textContent = 'Isi Pendaftaran';
+        modalRegisterLink.removeAttribute('target');
+        modalRegisterLink.removeAttribute('rel');
+      } else {
+        modalRegisterLink.hidden = true;
+        modalRegisterLink.href = '#';
+      }
 
       modal.hidden = false;
       document.body.classList.add('modal-open');
     }
 
     function closeModal() {
+      if (!modal) {
+        return;
+      }
+
       modal.hidden = true;
       document.body.classList.remove('modal-open');
     }
@@ -474,7 +537,7 @@
 
     function filterCourses() {
       const keyword = searchInput ? searchInput.value.toLowerCase().trim() : '';
-      const jenisValue = jenisFilter ? jenisFilter.value : '';
+      const jenisValue = selectedJenis;
       const modaValue = modaFilter ? modaFilter.value : '';
 
       let visibleCount = 0;
@@ -505,9 +568,19 @@
       searchInput.addEventListener('input', filterCourses);
     }
 
-    if (jenisFilter) {
-      jenisFilter.addEventListener('change', filterCourses);
-    }
+    jenisButtons.forEach(function (button) {
+      button.addEventListener('click', function () {
+        selectedJenis = button.dataset.jenis || '';
+
+        jenisButtons.forEach(function (btn) {
+          btn.classList.remove('is-active');
+        });
+
+        button.classList.add('is-active');
+
+        filterCourses();
+      });
+    });
 
     if (modaFilter) {
       modaFilter.addEventListener('change', filterCourses);
@@ -515,9 +588,24 @@
 
     if (resetButton) {
       resetButton.addEventListener('click', function () {
-        if (searchInput) searchInput.value = '';
-        if (jenisFilter) jenisFilter.value = '';
-        if (modaFilter) modaFilter.value = '';
+        if (searchInput) {
+          searchInput.value = '';
+        }
+
+        selectedJenis = '';
+
+        jenisButtons.forEach(function (btn) {
+          btn.classList.remove('is-active');
+
+          if ((btn.dataset.jenis || '') === '') {
+            btn.classList.add('is-active');
+          }
+        });
+
+        if (modaFilter) {
+          modaFilter.value = '';
+        }
+
         filterCourses();
       });
     }

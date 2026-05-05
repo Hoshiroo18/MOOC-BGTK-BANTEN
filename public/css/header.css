@@ -3,9 +3,13 @@
 ========================================================= */
 
 .site-header {
-  position: sticky;
-  top: 0;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
   z-index: 1000;
+
+  width: 100%;
 
   background: rgba(255, 255, 255, 0.94);
   border-bottom: 1px solid var(--line, #e6ebf4);
@@ -13,14 +17,17 @@
   box-shadow: 0 10px 30px rgba(10, 47, 107, 0.06);
 }
 
+body {
+  padding-top: 82px;
+}
+
 .header-inner {
   position: relative;
-
   min-height: 82px;
 
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 22px;
 }
 
@@ -33,7 +40,8 @@
   align-items: center;
   gap: 12px;
 
-  min-width: fit-content;
+  flex: 0 0 auto;
+  min-width: 0;
 
   color: var(--blue-900, #0a2f6b);
   text-decoration: none;
@@ -48,7 +56,7 @@
   place-items: center;
   flex: 0 0 auto;
 
-  color: white;
+  color: #ffffff;
   font-size: 22px;
   font-weight: 900;
 
@@ -68,9 +76,12 @@
   box-shadow: 0 12px 26px rgba(10, 63, 138, 0.22);
 }
 
+.brand-text {
+  min-width: 0;
+}
+
 .brand h1 {
   margin: 0;
-
   color: var(--blue-900, #0a2f6b);
   font-size: 18px;
   line-height: 1.1;
@@ -79,14 +90,63 @@
 
 .brand p {
   margin: 4px 0 0;
-
   color: var(--muted, #5b6474);
   font-size: 12px;
   font-weight: 700;
 }
 
 /* =========================================================
-   HAMBURGER BUTTON
+   NAV MENU
+========================================================= */
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+
+  flex: 0 0 auto;
+  margin-left: auto;
+  margin-right: -8px;
+}
+
+.nav-menu a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 42px;
+  padding: 0 14px;
+  border-radius: 999px;
+
+  color: var(--muted, #5b6474);
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+
+  transition: 0.2s ease;
+}
+
+.nav-menu a:hover {
+  color: var(--blue-900, #0a2f6b);
+  background: #e7f0ff;
+}
+
+/* =========================================================
+   HEADER ACTIONS
+========================================================= */
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  flex: 0 0 auto;
+  min-width: fit-content;
+}
+
+/* =========================================================
+   HAMBURGER
 ========================================================= */
 
 .header-menu-toggle {
@@ -135,54 +195,7 @@
 }
 
 /* =========================================================
-   NAV MENU - DESKTOP DEFAULT
-========================================================= */
-
-.nav-menu {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-
-  flex: 1;
-}
-
-.nav-menu a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  min-height: 42px;
-  padding: 0 14px;
-  border-radius: 999px;
-
-  color: var(--muted, #5b6474);
-  font-size: 14px;
-  font-weight: 800;
-  text-decoration: none;
-
-  transition: 0.2s ease;
-}
-
-.nav-menu a:hover {
-  color: var(--blue-900, #0a2f6b);
-  background: #e7f0ff;
-}
-
-/* =========================================================
-   HEADER ACTIONS
-========================================================= */
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-
-  min-width: fit-content;
-}
-
-/* =========================================================
-   USER DROPDOWN / LOGIN BUTTON
+   USER BUTTON / LOGIN BUTTON
 ========================================================= */
 
 .user-dropdown {
@@ -265,11 +278,17 @@
   font-size: 12px;
   opacity: 0.95;
   margin-top: 2px;
+
+  transition: 0.2s ease;
 }
 
 .user-dropdown[open] .user-trigger-arrow {
   transform: rotate(180deg);
 }
+
+/* =========================================================
+   USER DROPDOWN MENU
+========================================================= */
 
 .user-dropdown-menu {
   position: absolute;
@@ -281,7 +300,7 @@
   padding: 14px;
   border-radius: 20px;
 
-  background: white;
+  background: #ffffff;
   border: 1px solid var(--line, #e6ebf4);
   box-shadow:
     0 26px 70px rgba(10, 47, 107, 0.18),
@@ -298,10 +317,10 @@
 
 .user-dropdown-info strong {
   display: block;
+  margin-bottom: 4px;
 
   color: var(--blue-900, #0a2f6b);
   font-size: 14px;
-  margin-bottom: 4px;
 }
 
 .user-dropdown-info small {
@@ -355,41 +374,70 @@
 }
 
 /* =========================================================
-   AUTH / ADMIN RESPONSIVE
-   Kalau user login, menu admin banyak, jadi hamburger dari 900px.
+   AUTH HEADER MOBILE
+   Login admin/peserta: hamburger aktif dari 900px
 ========================================================= */
 
 @media (max-width: 900px) {
   .header-auth .header-inner {
-    min-height: 72px;
-    gap: 10px;
-    justify-content: flex-start;
+    min-height: 66px;
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+
+  .header-auth .brand {
+    flex: 1 1 auto;
+    max-width: 180px;
   }
 
   .header-auth .brand-logo {
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
     border-radius: 14px;
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .header-auth .brand h1 {
-    font-size: 16px;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .header-auth .brand p {
-    font-size: 11px;
+    display: none;
   }
 
-  .header-auth .header-menu-toggle {
-    display: inline-flex;
+  .header-auth .header-actions {
     order: 2;
     margin-left: auto;
   }
 
-  .header-auth .header-actions {
+  .header-auth .baduy-user-trigger {
+    max-width: 132px;
+    min-height: 40px;
+    padding: 0 12px;
+    gap: 6px;
+    font-size: 12px;
+  }
+
+  .header-auth .user-trigger-name {
+    max-width: 88px;
+  }
+
+  .header-auth .user-trigger-arrow {
+    font-size: 10px;
+  }
+
+  .header-auth .header-menu-toggle {
     order: 3;
+    display: inline-flex;
+    flex: 0 0 auto;
+
+    width: 42px;
+    height: 42px;
     margin-left: 0;
+    border-radius: 14px;
   }
 
   .header-auth .nav-menu {
@@ -400,9 +448,8 @@
     z-index: 1100;
 
     display: none;
-    flex: unset;
     width: 100%;
-
+    margin: 0;
     padding: 12px;
     border-radius: 22px;
 
@@ -429,8 +476,8 @@
     padding: 0 15px;
     border-radius: 14px;
 
-    background: #f3f7ff;
     color: var(--blue-900, #0a2f6b);
+    background: #f3f7ff;
   }
 
   .header-auth .nav-menu a:hover {
@@ -438,36 +485,29 @@
     transform: translateX(3px);
   }
 
-  .header-auth .baduy-user-trigger {
-    min-height: 46px;
-    padding: 0 16px;
-    font-size: 13px;
-  }
-
-  .header-auth .user-trigger-name {
-    max-width: 110px;
-  }
-
   .header-auth .user-dropdown-menu {
     width: 230px;
-    right: 0;
   }
 }
 
 /* =========================================================
-   GUEST / NON LOGIN RESPONSIVE
-   Desktop dan tablet tetap navbar normal.
-   Hamburger guest baru aktif di 480px.
+   GUEST HEADER MOBILE
+   Tamu: hamburger aktif dari 480px
 ========================================================= */
 
 @media (max-width: 480px) {
+  body {
+    padding-top: 66px;
+  }
+
   .header-guest .header-inner {
     min-height: 66px;
+    flex-wrap: nowrap;
     gap: 8px;
-    justify-content: flex-start;
   }
 
   .header-guest .brand {
+    flex: 1 1 auto;
     max-width: 190px;
   }
 
@@ -480,27 +520,33 @@
 
   .header-guest .brand h1 {
     font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .header-guest .brand p {
     display: none;
   }
 
-  .header-guest .header-menu-toggle {
-    display: inline-flex;
+  .header-guest .header-actions {
     order: 2;
     margin-left: auto;
-  }
-
-  .header-guest .header-actions {
-    order: 3;
-    margin-left: 0;
   }
 
   .header-guest .baduy-user-trigger {
     min-height: 42px;
     padding: 0 14px;
     font-size: 13px;
+  }
+
+  .header-guest .header-menu-toggle {
+    order: 3;
+    display: inline-flex;
+    flex: 0 0 auto;
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
   }
 
   .header-guest .nav-menu {
@@ -511,9 +557,8 @@
     z-index: 1100;
 
     display: none;
-    flex: unset;
     width: 100%;
-
+    margin: 0;
     padding: 12px;
     border-radius: 20px;
 
@@ -540,8 +585,8 @@
     padding: 0 14px;
     border-radius: 14px;
 
-    background: #f3f7ff;
     color: var(--blue-900, #0a2f6b);
+    background: #f3f7ff;
   }
 
   .header-guest .nav-menu a:hover {
@@ -550,30 +595,18 @@
   }
 }
 
-@media (max-width: 420px) {
-  .header-guest .brand {
-    max-width: 170px;
-  }
-
-  .header-guest .brand h1 {
-    font-size: 13px;
-  }
-
-  .header-guest .baduy-user-trigger {
-    padding: 0 12px;
-  }
-}
-
 /* =========================================================
-   LOGIN PAGE KHUSUS
-   Kalau mau login page baru hamburger di 320px,
-   tambahin body class login-body di layouts/app.blade.php.
+   LOGIN PAGE SPECIAL
+   Login page tetap desktop style kecuali layar super kecil
 ========================================================= */
 
 @media (min-width: 321px) {
+  .login-body {
+    padding-top: 82px;
+  }
+
   .login-body .header-guest .header-inner {
     min-height: 82px;
-    justify-content: space-between;
     gap: 22px;
   }
 
@@ -604,8 +637,9 @@
   .login-body .header-guest .nav-menu {
     position: static;
     display: flex !important;
-    flex: 1;
     width: auto;
+    margin-left: auto;
+    margin-right: -8px;
     padding: 0;
     border: 0;
     border-radius: 0;
@@ -630,11 +664,6 @@
     transform: none;
   }
 
-  .login-body .header-guest .header-actions {
-    order: initial;
-    margin-left: 0;
-  }
-
   .login-body .header-guest .baduy-user-trigger {
     min-height: 52px;
     padding: 0 24px;
@@ -642,263 +671,163 @@
   }
 }
 
-@media (max-width: 320px) {
+@media (max-width: 420px) {
+  .header-auth .brand,
+  .header-guest .brand {
+    max-width: 160px;
+  }
+
+  .header-auth .brand h1,
+  .header-guest .brand h1 {
+    font-size: 13px;
+  }
+
+  .header-auth .baduy-user-trigger {
+    max-width: 118px;
+    padding: 0 10px;
+    font-size: 11.5px;
+  }
+
+  .header-auth .user-trigger-name {
+    max-width: 76px;
+  }
+}
+
+@media (max-width: 360px) {
+  .header-auth .brand,
+  .header-guest .brand {
+    max-width: 130px;
+  }
+
+  .header-auth .brand h1,
+  .header-guest .brand h1 {
+    font-size: 12px;
+  }
+
+  .header-auth .baduy-user-trigger {
+    max-width: 104px;
+  }
+
+  .header-auth .user-trigger-name {
+    max-width: 64px;
+  }
+}
+
+/* =========================================================
+   FIX LOGIN PAGE MOBILE HEADER
+   Biar header login mobile gak acak-acakan
+========================================================= */
+
+@media (max-width: 768px) {
+  .login-body {
+    padding-top: 66px !important;
+  }
+
+  .login-body .site-header {
+    height: auto !important;
+  }
+
   .login-body .header-guest .header-inner {
-    min-height: 66px;
-    gap: 8px;
-    justify-content: flex-start;
+    min-height: 66px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+    flex-wrap: nowrap !important;
   }
 
   .login-body .header-guest .brand {
-    max-width: 150px;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    max-width: calc(100% - 56px) !important;
   }
 
   .login-body .header-guest .brand-logo {
-    width: 40px;
-    height: 40px;
-    border-radius: 14px;
-    font-size: 18px;
-  }
-
-  .login-body .header-guest .brand h1 {
-    font-size: 13px;
-  }
-
-  .login-body .header-guest .brand p {
-    display: none;
-  }
-
-  .login-body .header-guest .header-menu-toggle {
-    display: inline-flex !important;
-    order: 2;
-    margin-left: auto;
-  }
-
-  .login-body .header-guest .header-actions {
-    order: 3;
-    margin-left: 0;
-  }
-
-  .login-body .header-guest .baduy-user-trigger {
-    min-height: 42px;
-    padding: 0 12px;
-    font-size: 13px;
-  }
-
-  .login-body .header-guest .nav-menu {
-    position: absolute;
-    top: calc(100% + 10px);
-    left: 0;
-    right: 0;
-    z-index: 1100;
-
-    display: none !important;
-    flex: unset;
-    width: 100%;
-
-    padding: 12px;
-    border-radius: 20px;
-
-    background: rgba(255, 255, 255, 0.98);
-    border: 1px solid var(--line, #e6ebf4);
-    box-shadow:
-      0 22px 54px rgba(10, 47, 107, 0.16),
-      0 8px 18px rgba(10, 47, 107, 0.08);
-
-    backdrop-filter: blur(16px);
-  }
-
-  .login-body .header-guest .nav-menu.is-open {
-    display: grid !important;
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-
-  .login-body .header-guest .nav-menu a {
-    width: 100%;
-    min-height: 42px;
-    justify-content: flex-start;
-
-    padding: 0 14px;
-    border-radius: 14px;
-
-    background: #f3f7ff;
-    color: var(--blue-900, #0a2f6b);
-  }
-}
-
-/* =========================================================
-   DESKTOP ONLY - GESER NAVBAR KE KANAN DEKAT LOGIN
-========================================================= */
-
-@media (min-width: 901px) {
-  .header-guest .header-inner {
-    justify-content: flex-start !important;
-  }
-
-  .header-guest .brand {
-    flex: 0 0 auto !important;
-  }
-
-  .header-guest .nav-menu {
-    flex: 0 0 auto !important;
-    margin-left: auto !important;
-    margin-right: -10px !important;
-
-    justify-content: flex-end !important;
-  }
-
-  .header-guest .header-actions {
-    flex: 0 0 auto !important;
-    margin-left: 0 !important;
-  }
-}
-
-/* =========================================================
-   DESKTOP AUTH HEADER - NAV DEKET KE USER BUTTON
-========================================================= */
-
-@media (min-width: 901px) {
-  .header-auth .header-inner {
-    justify-content: flex-start !important;
-  }
-
-  .header-auth .brand {
-    flex: 0 0 auto !important;
-  }
-
-  .header-auth .nav-menu {
-    flex: 0 0 auto !important;
-    margin-left: auto !important;
-    margin-right: -8px !important;
-    justify-content: flex-end !important;
-  }
-
-  .header-auth .header-actions {
-    flex: 0 0 auto !important;
-    margin-left: 0 !important;
-  }
-}
-
-/* =========================================================
-   AUTH MOBILE HEADER - USER BUTTON TETAP SAMPING HAMBURGER
-========================================================= */
-
-@media (max-width: 900px) {
-  .header-auth .header-inner {
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-    gap: 8px !important;
-    min-height: 66px !important;
-  }
-
-  .header-auth .brand {
-    flex: 1 1 auto !important;
-    min-width: 0 !important;
-    max-width: 180px !important;
-  }
-
-  .header-auth .brand-logo {
     width: 40px !important;
     height: 40px !important;
     border-radius: 14px !important;
     font-size: 18px !important;
   }
 
-  .header-auth .brand h1 {
+  .login-body .header-guest .brand-text {
+    min-width: 0 !important;
+  }
+
+  .login-body .header-guest .brand h1 {
+    max-width: 190px !important;
     font-size: 14px !important;
+    line-height: 1.1 !important;
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
   }
 
-  .header-auth .brand p {
+  .login-body .header-guest .brand p {
     display: none !important;
   }
 
-  /* user button pindah ke samping hamburger */
-  .header-auth .header-actions {
-    order: 2 !important;
-    flex: 0 0 auto !important;
-    margin-left: auto !important;
+  /* tombol Login di header disembunyikan karena ini sudah halaman login */
+  .login-body .header-guest .header-actions {
+    display: none !important;
   }
 
-  .header-auth .user-dropdown {
-    display: block !important;
-  }
-
-  .header-auth .baduy-user-trigger {
-    min-height: 40px !important;
-    max-width: 132px !important;
-    padding: 0 12px !important;
-    gap: 6px !important;
-    font-size: 12px !important;
-    border-radius: 999px !important;
-  }
-
-  .header-auth .user-trigger-name {
-    max-width: 88px !important;
-    overflow: hidden !important;
-    white-space: nowrap !important;
-    text-overflow: ellipsis !important;
-  }
-
-  .header-auth .user-trigger-arrow {
-    font-size: 10px !important;
-  }
-
-  /* hamburger paling kanan */
-  .header-auth .header-menu-toggle {
-    order: 3 !important;
+  /* hamburger tetap ada */
+  .login-body .header-guest .header-menu-toggle {
     display: inline-flex !important;
     flex: 0 0 auto !important;
     width: 42px !important;
     height: 42px !important;
-    margin-left: 0 !important;
+    margin-left: auto !important;
     border-radius: 14px !important;
+    order: 3 !important;
   }
 
-  .header-auth .nav-menu {
+  /* menu jangan tampil desktop di mobile */
+  .login-body .header-guest .nav-menu {
+    position: absolute !important;
     top: calc(100% + 10px) !important;
-  }
-}
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 1100 !important;
 
-@media (max-width: 420px) {
-  .header-auth .brand {
-    max-width: 160px !important;
+    display: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 12px !important;
+    border-radius: 20px !important;
+
+    background: rgba(255, 255, 255, 0.98) !important;
+    border: 1px solid var(--line, #e6ebf4) !important;
+    box-shadow:
+      0 22px 54px rgba(10, 47, 107, 0.16),
+      0 8px 18px rgba(10, 47, 107, 0.08) !important;
+
+    backdrop-filter: blur(16px) !important;
   }
 
-  .header-auth .brand h1 {
+  .login-body .header-guest .nav-menu.is-open {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+
+  .login-body .header-guest .nav-menu a {
+    width: 100% !important;
+    min-height: 42px !important;
+    justify-content: flex-start !important;
+
+    padding: 0 14px !important;
+    border-radius: 14px !important;
+
+    background: #f3f7ff !important;
+    color: var(--blue-900, #0a2f6b) !important;
     font-size: 13px !important;
   }
-
-  .header-auth .baduy-user-trigger {
-    max-width: 118px !important;
-    padding: 0 10px !important;
-    font-size: 11.5px !important;
-  }
-
-  .header-auth .user-trigger-name {
-    max-width: 76px !important;
-  }
 }
 
-@media (max-width: 360px) {
-  .header-auth .brand {
-    max-width: 130px !important;
-  }
-
-  .header-auth .brand h1 {
-    font-size: 12px !important;
-  }
-
-  .header-auth .baduy-user-trigger {
-    max-width: 104px !important;
-  }
-
-  .header-auth .user-trigger-name {
-    max-width: 64px !important;
+@media (max-width: 380px) {
+  .login-body .header-guest .brand h1 {
+    max-width: 160px !important;
+    font-size: 13px !important;
   }
 }

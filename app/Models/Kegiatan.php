@@ -10,6 +10,8 @@ class Kegiatan extends Model
 
     protected $fillable = [
         'jenis_kegiatan',
+        'jenis_pelatihan',
+        'perlu_pendaftaran',
         'moda',
         'fasil',
         'kuota',
@@ -17,8 +19,19 @@ class Kegiatan extends Model
         'nama_kegiatan',
         'deskripsi',
         'link_zoom',
+        'moodle_course_url',
         'flayer',
         'slug',
         'link_pendaftaran',
     ];
+
+    protected $casts = [
+        'perlu_pendaftaran' => 'boolean',
+        'waktu_pelaksanaan' => 'datetime',
+    ];
+
+    public function kelas()
+    {
+        return $this->hasMany(Kelas::class, 'kegiatan_id');
+    }
 }

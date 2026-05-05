@@ -1,18 +1,31 @@
+@php
+  $user = Auth::user();
+
+  $adminEmails = [
+    'yusup.ardabili@kemendikdasmen.go.id',
+  ];
+
+  $isAdmin = $user && (
+    ($user->role ?? null) === 'admin' ||
+    in_array($user->email, $adminEmails, true)
+  );
+
+  $brandUrl = $isAdmin
+    ? route('admin.dashboard')
+    : url('/dashboard');
+@endphp
+
 <header class="site-header {{ Auth::check() ? 'header-auth' : 'header-guest' }}">
   <div class="container header-inner">
 
-    @auth
-      <a href="{{ route('admin.dashboard') }}" class="brand">
-    @else
-      <a href="{{ url('/dashboard') }}" class="brand">
-    @endauth
-        <div class="brand-logo">M</div>
+    <a href="{{ $brandUrl }}" class="brand">
+      <div class="brand-logo">M</div>
 
-        <div class="brand-text">
-          <h1>MOOC BGTK Banten</h1>
-          <p>Platform Pembelajaran Digital</p>
-        </div>
-      </a>
+      <div class="brand-text">
+        <h1>MOOC BGTK Banten</h1>
+        <p>Platform Pembelajaran Digital</p>
+      </div>
+    </a>
 
     <button
       type="button"
@@ -29,24 +42,31 @@
 
     <nav class="nav-menu" id="mainNavMenu">
       @auth
-        <a href="{{ route('admin.dashboard') }}">Dashboard Admin</a>
-        <a href="{{ route('admin.kegiatan.index') }}">Kegiatan</a>
-        <a href="{{ url('/admin/users') }}">Kelola User</a>
-        <a href="{{ url('/dashboard') }}">Lihat Web</a>
+        @if($isAdmin)
+          <a href="{{ route('admin.dashboard') }}">Dashboard Admin</a>
+          <a href="{{ route('admin.kegiatan.index') }}">Kegiatan</a>
+          <a href="{{ route('admin.users.index') }}">Kelola User</a>
+          <a href="{{ url('/dashboard') }}">Lihat Web</a>
+        @else
+          <a href="{{ url('/dashboard') }}">Dashboard</a>
+          <a href="{{ route('kelas.index') }}">Kelas Saya</a>
+          <a href="{{ route('sertifikat.index') }}">Sertifikat</a>
+          <a href="{{ route('bantuan.index') }}">Bantuan</a>
+        @endif
       @else
         <a href="{{ url('/dashboard') }}">Dashboard</a>
-        <a href="{{ url('/kelas') }}">Kelas</a>
-        <a href="{{ url('/sertifikat') }}">Sertifikat</a>
-        <a href="{{ url('/bantuan') }}">Bantuan</a>
+        <a href="{{ route('kelas.index') }}">Kelas</a>
+        <a href="{{ route('sertifikat.index') }}">Sertifikat</a>
+        <a href="{{ route('bantuan.index') }}">Bantuan</a>
       @endauth
     </nav>
 
     <div class="header-actions">
       @auth
         <details class="user-dropdown">
-          <summary class="user-trigger baduy-user-trigger">
+          <summary class="baduy-user-trigger">
             <span class="user-trigger-name">
-              {{ Auth::user()->name ?: Auth::user()->email }}
+              {{ $user->name ?: $user->email }}
             </span>
 
             <span class="user-trigger-arrow">▾</span>
@@ -54,8 +74,8 @@
 
           <div class="user-dropdown-menu">
             <div class="user-dropdown-info">
-              <strong>{{ Auth::user()->name ?: 'User' }}</strong>
-              <small>{{ Auth::user()->email }}</small>
+              <strong>{{ $user->name ?: 'User' }}</strong>
+              <small>{{ $user->email }}</small>
             </div>
 
             <form action="{{ route('logout') }}" method="POST">
@@ -86,21 +106,28 @@
       return;
     }
 
-    toggleButton.addEventListener('click', function () {
+    function closeMenu() {
+      navMenu.classList.remove('is-open');
+      toggleButton.classList.remove('is-open');
+      toggleButton.setAttribute('aria-expanded', 'false');
+      toggleButton.setAttribute('aria-label', 'Buka menu');
+    }
+
+    function toggleMenu() {
       const isOpen = navMenu.classList.toggle('is-open');
 
       toggleButton.classList.toggle('is-open', isOpen);
       toggleButton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
       toggleButton.setAttribute('aria-label', isOpen ? 'Tutup menu' : 'Buka menu');
+    }
+
+    toggleButton.addEventListener('click', function (event) {
+      event.stopPropagation();
+      toggleMenu();
     });
 
     navMenu.querySelectorAll('a').forEach(function (link) {
-      link.addEventListener('click', function () {
-        navMenu.classList.remove('is-open');
-        toggleButton.classList.remove('is-open');
-        toggleButton.setAttribute('aria-expanded', 'false');
-        toggleButton.setAttribute('aria-label', 'Buka menu');
-      });
+      link.addEventListener('click', closeMenu);
     });
 
     document.addEventListener('click', function (event) {
@@ -108,10 +135,13 @@
       const clickedToggle = toggleButton.contains(event.target);
 
       if (!clickedInsideNav && !clickedToggle) {
-        navMenu.classList.remove('is-open');
-        toggleButton.classList.remove('is-open');
-        toggleButton.setAttribute('aria-expanded', 'false');
-        toggleButton.setAttribute('aria-label', 'Buka menu');
+        closeMenu();
+      }
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') {
+        closeMenu();
       }
     });
   });

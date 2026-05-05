@@ -1,0 +1,310 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
+:root {
+  --blue-900: #0a2f6b;
+  --blue-800: #0b3f8a;
+  --blue-700: #0d56b6;
+  --sky-50: #f3f7ff;
+  --muted: #5b6474;
+  --line: #e6ebf4;
+  --danger: #b42318;
+  --danger-bg: #fff0f0;
+  --danger-line: #ffd0d0;
+  --success: #146c2e;
+  --success-bg: #e9fff1;
+  --success-line: #bff0ce;
+  --warning: #9a6700;
+  --warning-bg: #fff8df;
+  --warning-line: #ffe6a3;
+}
+
+.pendaftaran-page,
+.pendaftaran-page * {
+  font-family: "Outfit", sans-serif;
+}
+
+.pendaftaran-page {
+  background: linear-gradient(180deg, #ffffff 0%, var(--sky-50) 100%);
+  min-height: 100vh;
+  padding-bottom: 72px;
+}
+
+.pendaftaran-hero {
+  padding: 58px 0 76px;
+  background-color: #074a9a;
+  background-image:
+    linear-gradient(135deg, rgba(12, 74, 160, .78), rgba(13, 86, 182, .72)),
+    url("/images/baduy.jpg");
+  background-size: cover, 230px auto;
+  background-repeat: no-repeat, repeat;
+  color: white;
+}
+
+.pendaftaran-hero-inner h1 {
+  max-width: 820px;
+  margin: 18px 0 12px;
+  font-size: clamp(34px, 5vw, 56px);
+  line-height: 1;
+  letter-spacing: -1.5px;
+}
+
+.pendaftaran-hero-inner p {
+  max-width: 720px;
+  margin: 0;
+  color: rgba(255, 255, 255, .9);
+  line-height: 1.75;
+  font-weight: 600;
+}
+
+.pendaftaran-container {
+  margin-top: -34px;
+  position: relative;
+  z-index: 3;
+}
+
+.pendaftaran-layout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 24px;
+  align-items: start;
+}
+
+.pendaftaran-card,
+.pendaftaran-info-card,
+.success-card {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  box-shadow:
+    0 26px 70px rgba(10, 47, 107, .18),
+    0 10px 24px rgba(10, 47, 107, .08);
+}
+
+.pendaftaran-card {
+  padding: 28px;
+}
+
+.pendaftaran-info-card {
+  padding: 24px;
+}
+
+.form-kicker {
+  display: inline-flex;
+  width: fit-content;
+  margin-bottom: 12px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: #e7f0ff;
+  color: var(--blue-800);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.pendaftaran-card h2,
+.pendaftaran-info-card h3,
+.success-card h2 {
+  margin: 0 0 16px;
+  color: var(--blue-900);
+}
+
+.pendaftaran-form {
+  display: grid;
+  gap: 16px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.form-group {
+  display: grid;
+  gap: 8px;
+}
+
+.form-group label {
+  color: var(--blue-900);
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.form-group label span {
+  color: var(--danger);
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  min-height: 50px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  padding: 0 15px;
+  color: var(--blue-900);
+  background: white;
+  font-size: 14px;
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: var(--blue-700);
+  box-shadow: 0 0 0 4px rgba(13, 86, 182, .10);
+}
+
+.pendaftaran-submit,
+.success-main-btn,
+.success-outline-btn,
+.direct-access-grid a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.pendaftaran-submit,
+.success-main-btn,
+.direct-access-grid a {
+  width: 100%;
+  color: white;
+  cursor: pointer;
+  background-color: #074a9a;
+  background-image:
+    linear-gradient(135deg, rgba(12, 74, 160, .78), rgba(13, 86, 182, .72)),
+    url("/images/baduy.jpg");
+  background-size: cover, 130px auto;
+}
+
+.info-list {
+  display: grid;
+  gap: 12px;
+}
+
+.info-list div,
+.instruction-box,
+.login-info-box,
+.access-info {
+  padding: 14px;
+  border-radius: 16px;
+  background: var(--sky-50);
+  border: 1px solid var(--line);
+}
+
+.info-list span {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.info-list strong {
+  color: var(--blue-900);
+  font-size: 14px;
+}
+
+.alert-error {
+  margin-bottom: 16px;
+  padding: 13px 15px;
+  border-radius: 14px;
+  background: var(--danger-bg);
+  color: var(--danger);
+  border: 1px solid var(--danger-line);
+  font-weight: 800;
+}
+
+.success-card {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 34px;
+  text-align: center;
+}
+
+.success-icon {
+  display: grid;
+  place-items: center;
+  width: 68px;
+  height: 68px;
+  margin: 0 auto 18px;
+  border-radius: 999px;
+  color: var(--success);
+  background: var(--success-bg);
+  border: 1px solid var(--success-line);
+  font-size: 34px;
+  font-weight: 900;
+}
+
+.success-card p {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.instruction-box {
+  display: grid;
+  gap: 6px;
+  text-align: left;
+  margin: 18px 0;
+}
+
+.instruction-box.warning {
+  background: var(--warning-bg);
+  border-color: var(--warning-line);
+  color: var(--warning);
+}
+
+.instruction-box.success {
+  background: var(--success-bg);
+  border-color: var(--success-line);
+  color: var(--success);
+}
+
+.login-info-box {
+  text-align: left;
+  margin-top: 16px;
+}
+
+.login-info-box strong {
+  color: var(--blue-900);
+}
+
+.success-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.success-outline-btn {
+  color: var(--blue-900);
+  background: #e7f0ff;
+}
+
+.direct-access-grid {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+@media (max-width: 900px) {
+  .pendaftaran-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .form-row,
+  .success-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .pendaftaran-card,
+  .pendaftaran-info-card,
+  .success-card {
+    padding: 22px;
+    border-radius: 22px;
+  }
+}
