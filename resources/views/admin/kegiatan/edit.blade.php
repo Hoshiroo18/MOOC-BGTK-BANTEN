@@ -51,17 +51,17 @@
           <div class="preview-mini-list">
             <div>
               <span class="mini-dot webinar"></span>
-              <p>{{ ucfirst($kegiatan->jenis_kegiatan) }}</p>
+              <p>{{ optional($kegiatan->tipeKegiatan)->nama_kegiatan ?? '-' }}</p>
             </div>
 
             <div>
               <span class="mini-dot pelatihan"></span>
-              <p>{{ ucfirst($kegiatan->moda) }}</p>
+              <p>{{ optional($kegiatan->moda)->jenis_moda ?? '-' }}</p>
             </div>
 
             <div>
               <span class="mini-dot konsultasi"></span>
-              <p>{{ $kegiatan->perlu_pendaftaran ? 'Perlu pendaftaran' : 'Tanpa pendaftaran' }}</p>
+              <p>{{ $kegiatan->is_registration_required ? 'Perlu pendaftaran' : 'Tanpa pendaftaran' }}</p>
             </div>
           </div>
         </div>
@@ -88,7 +88,7 @@
       </div>
 
       <form
-        action="{{ route('admin.kegiatan.update', $kegiatan->id) }}"
+        action="{{ route('admin.kegiatan.update', $kegiatan->kegiatan_id) }}"
         method="POST"
         enctype="multipart/form-data"
         class="admin-form"
@@ -97,101 +97,104 @@
         @method('PUT')
 
         <div class="form-row">
+          {{-- Tipe Kegiatan --}}
           <div class="form-group">
-            <label for="jenis_kegiatan">
-              Jenis Kegiatan <span class="required-mark">*</span>
+            <label for="tipe_kegiatan_id">
+              Tipe Kegiatan <span class="required-mark">*</span>
             </label>
 
-            <select id="jenis_kegiatan" name="jenis_kegiatan" required>
-              <option value="">
-                Pilih jenis kegiatan
-              </option>
-
-              <option value="webinar" {{ old('jenis_kegiatan', $kegiatan->jenis_kegiatan) == 'webinar' ? 'selected' : '' }}>
-                Webinar
-              </option>
-
-              <option value="pelatihan" {{ old('jenis_kegiatan', $kegiatan->jenis_kegiatan) == 'pelatihan' ? 'selected' : '' }}>
-                Pelatihan
-              </option>
-
-              <option value="konsultasi" {{ old('jenis_kegiatan', $kegiatan->jenis_kegiatan) == 'konsultasi' ? 'selected' : '' }}>
-                Konsultasi
-              </option>
+            <select id="tipe_kegiatan_id" name="tipe_kegiatan_id" required>
+              <option value="">Pilih Tipe Kegiatan</option>
+              @foreach($tipeKegiatan as $tipe)
+                <option value="{{ $tipe->tipe_kegiatan_id }}"
+                  {{ old('tipe_kegiatan_id', $kegiatan->tipe_kegiatan_id) == $tipe->tipe_kegiatan_id ? 'selected' : '' }}>
+                  {{ $tipe->nama_kegiatan }}
+                </option>
+              @endforeach
             </select>
           </div>
 
+          {{-- Moda --}}
           <div class="form-group">
-            <label for="moda">
+            <label for="moda_id">
               Moda <span class="required-mark">*</span>
             </label>
 
-            <select id="moda" name="moda" required>
-              <option value="">
-                Pilih moda
-              </option>
-
-              <option value="luring" {{ old('moda', $kegiatan->moda) == 'luring' ? 'selected' : '' }}>
-                Luring
-              </option>
-
-              <option value="daring" {{ old('moda', $kegiatan->moda) == 'daring' ? 'selected' : '' }}>
-                Daring
-              </option>
-
-              <option value="hybrid" {{ old('moda', $kegiatan->moda) == 'hybrid' ? 'selected' : '' }}>
-                Hybrid
-              </option>
+            <select id="moda_id" name="moda_id" required>
+              <option value="">Pilih Moda</option>
+              @foreach($modaList as $moda)
+                <option value="{{ $moda->moda_id }}"
+                  {{ old('moda_id', $kegiatan->moda_id) == $moda->moda_id ? 'selected' : '' }}>
+                  {{ $moda->jenis_moda }}
+                </option>
+              @endforeach
             </select>
           </div>
         </div>
 
-<div class="form-row">
-  <div class="form-group" id="jenisPelatihanGroup">
-    <label for="jenis_pelatihan">
-      Jenis Pelatihan
-    </label>
+        <div class="form-row">
+          {{-- Jenis Kegiatan --}}
+          <div class="form-group">
+            <label for="jenis_kegiatan_id">
+              Jenis Kegiatan
+            </label>
 
-    <select id="jenis_pelatihan" name="jenis_pelatihan">
-      <option value="">
-        Pilih jenis pelatihan
-      </option>
+            <select id="jenis_kegiatan_id" name="jenis_kegiatan_id">
+              <option value="">Pilih jenis (opsional)</option>
+              @foreach($jenisKegiatan as $jenis)
+                <option value="{{ $jenis->jenis_kegiatan_id }}"
+                  {{ old('jenis_kegiatan_id', $kegiatan->jenis_kegiatan_id) == $jenis->jenis_kegiatan_id ? 'selected' : '' }}>
+                  {{ $jenis->jenis_kegiatan }}
+                </option>
+              @endforeach
+            </select>
 
-      <option value="terbimbing" {{ old('jenis_pelatihan', $kegiatan->jenis_pelatihan) == 'terbimbing' ? 'selected' : '' }}>
-        Terbimbing
-      </option>
+            <small class="form-help">
+              Bisa dipilih untuk webinar, pelatihan, maupun konsultasi.
+            </small>
+          </div>
 
-      <option value="mandiri" {{ old('jenis_pelatihan', $kegiatan->jenis_pelatihan) == 'mandiri' ? 'selected' : '' }}>
-        Mandiri
-      </option>
-    </select>
+          {{-- Perlu Pendaftaran --}}
+          <div class="form-group">
+            <label for="is_registration_required">
+              Perlu Pendaftaran?
+            </label>
 
-    <small class="form-help">
-      Bisa dipilih untuk webinar, pelatihan, maupun konsultasi.
-    </small>
-  </div>
+            <select id="is_registration_required" name="is_registration_required">
+              <option value="1"
+                {{ old('is_registration_required', $kegiatan->is_registration_required ? '1' : '0') == '1' ? 'selected' : '' }}>
+                Ya, perlu pendaftaran
+              </option>
+              <option value="0"
+                {{ old('is_registration_required', $kegiatan->is_registration_required ? '1' : '0') == '0' ? 'selected' : '' }}>
+                Tidak perlu pendaftaran
+              </option>
+            </select>
 
-  <div class="form-group">
-    <label for="perlu_pendaftaran">
-      Perlu Isi Pendaftaran?
-    </label>
+            <small class="form-help">
+              Otomatis terisi sesuai jenis kegiatan yang dipilih.
+            </small>
+          </div>
+        </div>
 
-    <select id="perlu_pendaftaran" name="perlu_pendaftaran">
-      <option value="1" {{ old('perlu_pendaftaran', $kegiatan->perlu_pendaftaran ? '1' : '0') == '1' ? 'selected' : '' }}>
-        Ya, perlu pendaftaran
-      </option>
+        {{-- Kuota --}}
+        <div class="form-group">
+          <label for="kuota">
+            Kuota <span class="required-mark">*</span>
+          </label>
 
-      <option value="0" {{ old('perlu_pendaftaran', $kegiatan->perlu_pendaftaran ? '1' : '0') == '0' ? 'selected' : '' }}>
-        Tidak perlu pendaftaran
-      </option>
-    </select>
+          <input
+            type="number"
+            id="kuota"
+            name="kuota"
+            value="{{ old('kuota', $kegiatan->kuota) }}"
+            placeholder="Contoh: 100"
+            min="1"
+            required
+          >
+        </div>
 
-    <small class="form-help">
-      Terbimbing otomatis perlu daftar. Mandiri otomatis tidak perlu.
-    </small>
-  </div>
-</div>
-
+        {{-- Nama Kegiatan --}}
         <div class="form-group">
           <label for="nama_kegiatan">
             Nama Kegiatan <span class="required-mark">*</span>
@@ -207,69 +210,78 @@
           >
         </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label for="fasil">
-              Fasilitator <span class="required-mark">*</span>
-            </label>
-
-            <input
-              type="text"
-              id="fasil"
-              name="fasil"
-              value="{{ old('fasil', $kegiatan->fasil) }}"
-              placeholder="Contoh: Dr. Yusup Ardabili"
-              required
-            >
-          </div>
-
-          <div class="form-group">
-            <label for="kuota">
-              Kuota <span class="required-mark">*</span>
-            </label>
-
-            <input
-              type="number"
-              id="kuota"
-              name="kuota"
-              value="{{ old('kuota', $kegiatan->kuota) }}"
-              placeholder="Contoh: 100"
-              min="1"
-              required
-            >
-          </div>
-        </div>
-
+        {{-- Fasilitator --}}
         <div class="form-group">
-          <label for="waktu_pelaksanaan">
-            Waktu Pelaksanaan <span class="required-mark">*</span>
-          </label>
+          @php
+            $selectedFasilitators = $kegiatan->fasilitators->pluck('fasilitator_id')->toArray();
+          @endphp
 
-          <input
-            type="text"
-            id="waktu_pelaksanaan"
-            name="waktu_pelaksanaan"
-            class="datetime-picker"
-            value="{{ old('waktu_pelaksanaan', \Carbon\Carbon::parse($kegiatan->waktu_pelaksanaan)->format('Y-m-d H:i')) }}"
-            placeholder="Pilih tanggal dan jam kegiatan"
-            required
-          >
+          @include('partials.kegiatan.addfasil', [
+            'fasilitators'         => $fasilitators,
+            'selectedFasilitators' => $selectedFasilitators,
+          ])
         </div>
 
-<div class="form-group">
-  <label for="deskripsi">
-    Deskripsi <span class="required-mark">*</span>
-  </label>
+       <div class="form-row">
+  {{-- Waktu Pelaksanaan --}}
+  {{-- <div class="form-group">
+    <label for="waktu_pelaksanaan">
+      Waktu Pelaksanaan <span class="required-mark">*</span>
+    </label>
+    <input
+      type="text"
+      id="waktu_pelaksanaan"
+      name="waktu_pelaksanaan"
+      class="datetime-picker"
+      value="{{ old('waktu_pelaksanaan', $kegiatan->waktu_pelaksanaan?->format('Y-m-d H:i')) }}"
+      placeholder="Pilih tanggal dan jam kegiatan"
+      required
+    >
+  </div> --}}
 
-  <textarea
-    id="deskripsi"
-    name="deskripsi"
-    rows="4"
-    placeholder="Tulis deskripsi kegiatan..."
-    required
-  >{{ old('deskripsi', $kegiatan->deskripsi) }}</textarea>
+  <div class="form-group">
+    <label for="start_date">
+      Tanggal Mulai
+    </label>
+    <input
+      type="date"
+      id="start_date"
+      name="start_date"
+      value="{{ old('start_date', $kegiatan->start_date?->format('Y-m-d')) }}"
+    >
+    <small class="form-help">Tanggal kegiatan dimulai.</small>
+  </div>
+
+  <div class="form-group">
+    <label for="end_date">
+      Tanggal Selesai
+    </label>
+    <input
+      type="date"
+      id="end_date"
+      name="end_date"
+      value="{{ old('end_date', $kegiatan->end_date?->format('Y-m-d')) }}"
+    >
+    <small class="form-help">Tanggal kegiatan berakhir.</small>
+  </div>
 </div>
 
+        {{-- Deskripsi --}}
+        <div class="form-group">
+          <label for="deskripsi">
+            Deskripsi <span class="required-mark">*</span>
+          </label>
+
+          <textarea
+            id="deskripsi"
+            name="deskripsi"
+            rows="4"
+            placeholder="Tulis deskripsi kegiatan..."
+            required
+          >{{ old('deskripsi', $kegiatan->deskripsi) }}</textarea>
+        </div>
+
+        {{-- Link Zoom --}}
         <div class="form-group">
           <label for="link_zoom">
             Link Zoom
@@ -284,16 +296,17 @@
           >
         </div>
 
+        {{-- Link LMS --}}
         <div class="form-group">
-          <label for="moodle_course_url">
-            Link Course Moodle
+          <label for="link_lms">
+            Link Course Moodle / LMS
           </label>
 
           <input
             type="text"
-            id="moodle_course_url"
-            name="moodle_course_url"
-            value="{{ old('moodle_course_url', $kegiatan->moodle_course_url) }}"
+            id="link_lms"
+            name="link_lms"
+            value="{{ old('link_lms', $kegiatan->link_lms) }}"
             placeholder="https://moodle.example.com/course/view.php?id=..."
           >
 
@@ -302,23 +315,65 @@
           </small>
         </div>
 
-<div class="form-group">
-  <label for="flayer">
-    Ganti Flayer {{ $kegiatan->flayer ? '' : '*' }}
-  </label>
+        {{-- TOKEN DAN STATUS URL --}}
+        <div class="form-row">
+          <div class="form-group">
+            <label for="token_kegiatan">
+              Token Kegiatan
+            </label>
 
-  <input
-    type="file"
-    id="flayer"
-    name="flayer"
-    accept="image/*"
-    {{ $kegiatan->flayer ? '' : 'required' }}
-  >
+            <input
+              type="text"
+              id="token_kegiatan"
+              name="token_kegiatan"
+              value="{{ old('token_kegiatan', $kegiatan->token_kegiatan) }}"
+              placeholder="Token opsional (max 10 karakter)"
+              maxlength="10"
+            >
 
-  <small class="form-help">
-    Kosongkan jika tidak ingin mengganti flayer. Kalau belum ada flayer, field ini wajib diisi. Ukuran wajib 1080x1350.
-  </small>
-</div>
+            <small class="form-help">
+              Token untuk keperluan khusus kegiatan. Bisa diisi manual sesuai kebutuhan.
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label for="status_url">
+              Status URL Pendaftaran
+            </label>
+
+            <select id="status_url" name="status_url">
+              <option value="active" {{ old('status_url', $kegiatan->status_url ?? 'active') == 'active' ? 'selected' : '' }}>
+                Aktif (URL dapat diakses)
+              </option>
+              <option value="inactive" {{ old('status_url', $kegiatan->status_url ?? 'active') == 'inactive' ? 'selected' : '' }}>
+                Nonaktif (URL tidak dapat diakses)
+              </option>
+            </select>
+
+            <small class="form-help">
+              Jika Nonaktif, link pendaftaran tidak akan bisa diakses oleh user.
+            </small>
+          </div>
+        </div>
+
+        {{-- Flayer --}}
+        <div class="form-group">
+          <label for="flayer">
+            Ganti Flayer {{ $kegiatan->flayer ? '' : '*' }}
+          </label>
+
+          <input
+            type="file"
+            id="flayer"
+            name="flayer"
+            accept="image/*"
+            {{ $kegiatan->flayer ? '' : 'required' }}
+          >
+
+          <small class="form-help">
+            Kosongkan jika tidak ingin mengganti flayer. Kalau belum ada flayer, field ini wajib diisi. Ukuran wajib <b>1080x1350</b>.
+          </small>
+        </div>
 
         @if($kegiatan->flayer)
           <div class="edit-flayer-preview">
@@ -331,6 +386,7 @@
           </div>
         @endif
 
+        {{-- Link Pendaftaran (readonly) --}}
         <div class="form-group">
           <label>Link Pendaftaran</label>
 
@@ -377,34 +433,28 @@
         disableMobile: true
       });
     }
+  });
+</script>
 
-    const jenisPelatihan = document.getElementById('jenis_pelatihan');
-    const perluPendaftaran = document.getElementById('perlu_pendaftaran');
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const jenisKegiatan  = document.getElementById('jenis_kegiatan_id');
+    const isRegistration = document.getElementById('is_registration_required');
 
-    if (!jenisPelatihan || !perluPendaftaran) {
-      return;
-    }
+    if (!jenisKegiatan || !isRegistration) return;
 
-    function syncJenisPelatihan() {
-      const pelatihan = jenisPelatihan.value;
+    // ✅ Hapus pemanggilan syncRegistration() saat load
+    // Hanya sync saat user mengubah jenis kegiatan
+    jenisKegiatan.addEventListener('change', function () {
+      const val = jenisKegiatan.value;
 
-      /*
-        Jenis Pelatihan bebas dipilih untuk semua jenis kegiatan.
-        Tidak mengubah Jenis Kegiatan.
-      */
-
-      if (pelatihan === 'terbimbing') {
-        perluPendaftaran.value = '1';
+      if (val === '1') {
+        isRegistration.value = '1';
+      } else if (val === '2') {
+        isRegistration.value = '0';
       }
-
-      if (pelatihan === 'mandiri') {
-        perluPendaftaran.value = '0';
-      }
-    }
-
-    jenisPelatihan.addEventListener('change', syncJenisPelatihan);
-
-    syncJenisPelatihan();
+      // Kalau val lain / kosong → biarkan user pilih manual
+    });
   });
 </script>
 

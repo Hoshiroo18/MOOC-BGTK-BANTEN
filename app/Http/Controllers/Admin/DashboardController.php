@@ -11,21 +11,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $totalCourses = Course::count();
-        $publishedCourses = Course::where('status', 'published')->count();
-        $draftCourses = Course::where('status', 'draft')->count();
-
-        $totalUsers = User::count();
-
-        $latestCourses = Course::latest()->take(6)->get();
-
-        return view('admin.dashboard', compact(
-            'totalCourses',
-            'publishedCourses',
-            'draftCourses',
-            'totalUsers',
-            'latestCourses'
-        ));
+        return view('admin.dashboard');
     }
 
     public function storeCourse(Request $request)

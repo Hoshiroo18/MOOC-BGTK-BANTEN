@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Kota extends Model
+{
+    use HasFactory;
+    protected $table = 'kota';
+    protected $primaryKey = 'kota_id';
+    public $timestamps = false;
+
+    protected $fillable = [
+        'kota_id',
+        'nama_kota'
+    ];
+}

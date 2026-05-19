@@ -10,12 +10,12 @@
 @section('content')
 
 @php
-  $kegiatanCollection = method_exists($kegiatan, 'getCollection') ? $kegiatan->getCollection() : collect($kegiatan);
+  $kegiatanCollection = collect($kegiatan);
 
-  $totalKegiatan = method_exists($kegiatan, 'total') ? $kegiatan->total() : $kegiatanCollection->count();
-  $totalWebinar = $kegiatanCollection->where('jenis_kegiatan', 'webinar')->count();
-  $totalPelatihan = $kegiatanCollection->where('jenis_kegiatan', 'pelatihan')->count();
-  $totalKonsultasi = $kegiatanCollection->where('jenis_kegiatan', 'konsultasi')->count();
+  $totalKegiatan  = $kegiatanCollection->count();
+  $totalWebinar   = $kegiatanCollection->filter(fn($k) => optional($k->tipeKegiatan)->nama_kegiatan === 'Webinar')->count();
+  $totalPelatihan = $kegiatanCollection->filter(fn($k) => optional($k->tipeKegiatan)->nama_kegiatan === 'Seminar')->count();
+  $totalKonsultasi= $kegiatanCollection->filter(fn($k) => optional($k->tipeKegiatan)->nama_kegiatan === 'Konsultasi')->count();
 @endphp
 
 <section class="admin-kegiatan-page">
@@ -58,7 +58,7 @@
 
           <div>
             <strong>{{ $totalPelatihan }}</strong>
-            <span>Pelatihan</span>
+            <span>Seminar</span>
           </div>
 
           <div>
@@ -150,131 +150,82 @@
           @csrf
 
           <div class="form-row">
+            {{-- Tipe Kegiatan dari tabel tipe_kegiatan --}}
             <div class="form-group">
-              <label for="jenis_kegiatan">
-                Jenis Kegiatan <span class="required-mark">*</span>
+              <label for="tipe_kegiatan_id">
+                Tipe Kegiatan <span class="required-mark">*</span>
               </label>
 
-              <select id="jenis_kegiatan" name="jenis_kegiatan" required>
-                <option value="" {{ old('jenis_kegiatan') ? '' : 'selected' }}>
-                  Pilih jenis kegiatan
-                </option>
-
-                <option value="webinar" {{ old('jenis_kegiatan') == 'webinar' ? 'selected' : '' }}>
-                  Webinar
-                </option>
-
-                <option value="pelatihan" {{ old('jenis_kegiatan') == 'pelatihan' ? 'selected' : '' }}>
-                  Pelatihan
-                </option>
-
-                <option value="konsultasi" {{ old('jenis_kegiatan') == 'konsultasi' ? 'selected' : '' }}>
-                  Konsultasi
-                </option>
+              <select id="tipe_kegiatan_id" name="tipe_kegiatan_id" required>
+                <option value="">Pilih Tipe kegiatan</option>
+                @foreach($tipeKegiatan as $tipe)
+                  <option value="{{ $tipe->tipe_kegiatan_id }}"
+                    {{ old('tipe_kegiatan_id') == $tipe->tipe_kegiatan_id ? 'selected' : '' }}>
+                    {{ $tipe->nama_kegiatan }}
+                  </option>
+                @endforeach
               </select>
             </div>
 
+            {{-- Moda dari tabel moda --}}
             <div class="form-group">
-              <label for="moda">
+              <label for="moda_id">
                 Moda <span class="required-mark">*</span>
               </label>
 
-              <select id="moda" name="moda" required>
-                <option value="" {{ old('moda') ? '' : 'selected' }}>
-                  Pilih moda
-                </option>
-
-                <option value="luring" {{ old('moda') == 'luring' ? 'selected' : '' }}>
-                  Luring
-                </option>
-
-                <option value="daring" {{ old('moda') == 'daring' ? 'selected' : '' }}>
-                  Daring
-                </option>
-
-                <option value="hybrid" {{ old('moda') == 'hybrid' ? 'selected' : '' }}>
-                  Hybrid
-                </option>
+              <select id="moda_id" name="moda_id" required>
+                <option value="">Pilih moda</option>
+                @foreach($modaList as $moda)
+                  <option value="{{ $moda->moda_id }}"
+                    {{ old('moda_id') == $moda->moda_id ? 'selected' : '' }}>
+                    {{ $moda->jenis_moda }}
+                  </option>
+                @endforeach
               </select>
             </div>
           </div>
 
-<div class="form-row">
-  <div class="form-group" id="jenisPelatihanGroup">
-    <label for="jenis_pelatihan">
-      Jenis Pelatihan
-    </label>
-
-    <select id="jenis_pelatihan" name="jenis_pelatihan">
-      <option value="" {{ old('jenis_pelatihan') ? '' : 'selected' }}>
-        Pilih jenis pelatihan
-      </option>
-
-      <option value="terbimbing" {{ old('jenis_pelatihan') == 'terbimbing' ? 'selected' : '' }}>
-        Terbimbing
-      </option>
-
-      <option value="mandiri" {{ old('jenis_pelatihan') == 'mandiri' ? 'selected' : '' }}>
-        Mandiri
-      </option>
-    </select>
-
-    <small class="form-help">
-      Bisa dipilih untuk webinar, pelatihan, maupun konsultasi.
-    </small>
-  </div>
-
-  <div class="form-group">
-    <label for="perlu_pendaftaran">
-      Perlu Isi Pendaftaran?
-    </label>
-
-    <select id="perlu_pendaftaran" name="perlu_pendaftaran">
-      <option value="1" {{ old('perlu_pendaftaran', '1') == '1' ? 'selected' : '' }}>
-        Ya, perlu pendaftaran
-      </option>
-
-      <option value="0" {{ old('perlu_pendaftaran') == '0' ? 'selected' : '' }}>
-        Tidak perlu pendaftaran
-      </option>
-    </select>
-
-    <small class="form-help">
-      Terbimbing otomatis perlu daftar. Mandiri otomatis tidak perlu.
-    </small>
-  </div>
-</div>
-
-          <div class="form-group">
-            <label for="nama_kegiatan">
-              Nama Kegiatan <span class="required-mark">*</span>
-            </label>
-
-            <input
-              type="text"
-              id="nama_kegiatan"
-              name="nama_kegiatan"
-              value="{{ old('nama_kegiatan') }}"
-              placeholder="Contoh: Webinar Implementasi Kurikulum Merdeka"
-              required
-            >
-          </div>
-
           <div class="form-row">
+            {{-- Jenis Kegiatan dari tabel jenis_kegiatan --}}
             <div class="form-group">
-              <label for="fasil">
-                Fasilitator <span class="required-mark">*</span>
+              <label for="jenis_kegiatan_id">
+                Jenis Kegiatan
               </label>
 
-              <input
-                type="text"
-                id="fasil"
-                name="fasil"
-                value="{{ old('fasil') }}"
-                placeholder="Contoh: Dr. Yusup Ardabili"
-                required
-              >
+              <select id="jenis_kegiatan_id" name="jenis_kegiatan_id">
+                <option value="">Pilih jenis (opsional)</option>
+                @foreach($jenisKegiatan as $jenis)
+                  <option value="{{ $jenis->jenis_kegiatan_id }}"
+                    {{ old('jenis_kegiatan_id') == $jenis->jenis_kegiatan_id ? 'selected' : '' }}>
+                    {{ $jenis->jenis_kegiatan }}
+                  </option>
+                @endforeach
+              </select>
+
+              <small class="form-help">
+                Bisa dipilih untuk webinar, pelatihan, maupun konsultasi.
+              </small>
             </div>
+
+             {{-- Perlu Pendaftaran --}}
+<div class="form-group">
+  <label for="is_registration_required">
+    Perlu Pendaftaran?
+  </label>
+
+  <select id="is_registration_required" name="is_registration_required">
+    <option value="1" {{ old('is_registration_required', '1') == '1' ? 'selected' : '' }}>
+      Ya, perlu pendaftaran
+    </option>
+    <option value="0" {{ old('is_registration_required') == '0' ? 'selected' : '' }}>
+      Tidak perlu pendaftaran
+    </option>
+  </select>
+
+  <small class="form-help">
+    Otomatis terisi sesuai jenis kegiatan yang dipilih.
+  </small>
+</div>
 
             <div class="form-group">
               <label for="kuota">
@@ -294,34 +245,82 @@
           </div>
 
           <div class="form-group">
-            <label for="waktu_pelaksanaan">
-              Waktu Pelaksanaan <span class="required-mark">*</span>
+            <label for="nama_kegiatan">
+              Nama Kegiatan <span class="required-mark">*</span>
             </label>
 
             <input
               type="text"
-              id="waktu_pelaksanaan"
-              name="waktu_pelaksanaan"
-              class="datetime-picker"
-              value="{{ old('waktu_pelaksanaan') }}"
-              placeholder="Pilih tanggal dan jam kegiatan"
+              id="nama_kegiatan"
+              name="nama_kegiatan"
+              value="{{ old('nama_kegiatan') }}"
+              placeholder="Contoh: Webinar Implementasi Kurikulum Merdeka"
               required
             >
           </div>
 
-<div class="form-group">
-  <label for="deskripsi">
-    Deskripsi <span class="required-mark">*</span>
-  </label>
+          {{-- Fasilitator multiple checkbox dari tabel fasilitator --}}
+         <div class="form-group">
 
-  <textarea
-    id="deskripsi"
-    name="deskripsi"
-    rows="4"
-    placeholder="Tulis deskripsi kegiatan..."
-    required
-  >{{ old('deskripsi') }}</textarea>
+  @include('partials.kegiatan.addfasil', ['fasilitators' => $fasilitators])
 </div>
+
+      <div class="form-row">
+  {{-- <div class="form-group">
+    <label for="waktu_pelaksanaan">
+      Waktu Pelaksanaan <span class="required-mark">*</span>
+    </label>
+    <input
+      type="text"
+      id="waktu_pelaksanaan"
+      name="waktu_pelaksanaan"
+      class="datetime-picker"
+      value="{{ old('waktu_pelaksanaan') }}"
+      placeholder="Pilih tanggal dan jam kegiatan"
+      required
+    >
+  </div> --}}
+
+  <div class="form-group">
+    <label for="start_date">
+      Tanggal Mulai
+    </label>
+    <input
+      type="date"
+      id="start_date"
+      name="start_date"
+      value="{{ old('start_date') }}"
+    >
+    <small class="form-help">Tanggal kegiatan dimulai.</small>
+  </div>
+
+  <div class="form-group">
+    <label for="end_date">
+      Tanggal Selesai
+    </label>
+    <input
+      type="date"
+      id="end_date"
+      name="end_date"
+      value="{{ old('end_date') }}"
+    >
+    <small class="form-help">Tanggal kegiatan berakhir.</small>
+  </div>
+</div>
+
+          <div class="form-group">
+            <label for="deskripsi">
+              Deskripsi <span class="required-mark">*</span>
+            </label>
+
+            <textarea
+              id="deskripsi"
+              name="deskripsi"
+              rows="4"
+              placeholder="Tulis deskripsi kegiatan..."
+              required
+            >{{ old('deskripsi') }}</textarea>
+          </div>
 
           <div class="form-group">
             <label for="link_zoom">
@@ -338,15 +337,15 @@
           </div>
 
           <div class="form-group">
-            <label for="moodle_course_url">
-              Link Course Moodle
+            <label for="link_lms">
+              Link Course Moodle / LMS
             </label>
 
             <input
               type="text"
-              id="moodle_course_url"
-              name="moodle_course_url"
-              value="{{ old('moodle_course_url') }}"
+              id="link_lms"
+              name="link_lms"
+              value="{{ old('link_lms') }}"
               placeholder="https://moodle.example.com/course/view.php?id=..."
             >
 
@@ -355,23 +354,63 @@
             </small>
           </div>
 
+          <div class="form-group">
+            <label for="flayer">
+              Flayer <span class="required-mark">*</span>
+            </label>
 
-<div class="form-group">
-  <label for="flayer">
-    Flayer <span class="required-mark">*</span>
-  </label>
+            <input
+              type="file"
+              id="flayer"
+              name="flayer"
+              accept="image/*"
+              required
+            >
 
-  <input
-    type="file"
-    id="flayer"
-    name="flayer"
-    accept="image/*"
-    required
-  >
+            <small class="form-help">
+              Flayer yang akan di upload wajib memiliki ukuran <b>1080x1350</b>.
+            </small>
+          </div>
 
-  <small class="form-help">
-    Flayer yang akan di upload wajib memiliki ukuran <b>1080x1350</b>.
-  </small>
+          {{-- Tambahan field untuk Token dan Status URL --}}
+<div class="form-row">
+    <div class="form-group">
+        <label for="token_kegiatan">
+            Token Kegiatan
+        </label>
+
+        <input
+            type="text"
+            id="token_kegiatan"
+            name="token_kegiatan"
+            value="{{ old('token_kegiatan') }}"
+            placeholder="Token opsional (max 10 karakter)"
+            maxlength="10"
+        >
+
+        <small class="form-help">
+            Token untuk keperluan khusus kegiatan. Bisa diisi manual sesuai kebutuhan.
+        </small>
+    </div>
+
+    <div class="form-group">
+        <label for="status_url">
+            Status URL Pendaftaran
+        </label>
+
+        <select id="status_url" name="status_url">
+            <option value="active" {{ old('status_url', 'active') == 'active' ? 'selected' : '' }}>
+                Aktif (URL dapat diakses)
+            </option>
+            <option value="inactive" {{ old('status_url') == 'inactive' ? 'selected' : '' }}>
+                Nonaktif (URL tidak dapat diakses)
+            </option>
+        </select>
+
+        <small class="form-help">
+            Jika Nonaktif, link pendaftaran tidak akan bisa diakses oleh user.
+        </small>
+    </div>
 </div>
 
           <div class="form-group">
@@ -439,14 +478,12 @@
 
               <div class="kegiatan-item-body">
                 <div class="kegiatan-badges">
-                  <span>{{ ucfirst($item->jenis_kegiatan) }}</span>
-                  <span>{{ ucfirst($item->moda) }}</span>
+                  <span>{{ optional($item->tipeKegiatan)->nama_kegiatan ?? '-' }}</span>
+                  <span>{{ optional($item->moda)->jenis_moda ?? '-' }}</span>
 
-                  @if($item->jenis_kegiatan === 'pelatihan' && $item->jenis_pelatihan)
-                    <span>{{ ucfirst($item->jenis_pelatihan) }}</span>
+                  @if($item->jenisKegiatan)
+                    <span>{{ $item->jenisKegiatan->jenis_kegiatan }}</span>
                   @endif
-
-                  <span>{{ $item->perlu_pendaftaran ? 'Perlu Daftar' : 'Tanpa Daftar' }}</span>
                 </div>
 
                 <h3>{{ $item->nama_kegiatan }}</h3>
@@ -456,14 +493,19 @@
                 </p>
 
                 <div class="kegiatan-meta">
-                  <small>Fasil: {{ $item->fasil ?? '-' }}</small>
-                  <small>Kuota: {{ $item->kuota }}</small>
                   <small>
-                    Waktu:
-                    {{ \Carbon\Carbon::parse($item->waktu_pelaksanaan)->format('d M Y H:i') }}
+                    Fasil:
+                    {{ $item->fasilitators->pluck('nama')->join(', ') ?: '-' }}
                   </small>
+                  <small>Kuota: {{ $item->kuota }}</small>
+                <small>
+                    Waktu:
+                    {{ $item->start_date ? \Carbon\Carbon::parse($item->start_date)->format('d M Y') : '-' }}
+                    s/d
+                    {{ $item->end_date ? \Carbon\Carbon::parse($item->end_date)->format('d M Y') : '-' }}
+                    </small>
 
-                  @if($item->moodle_course_url)
+                  @if($item->link_lms)
                     <small>Moodle: tersedia</small>
                   @endif
                 </div>
@@ -476,15 +518,15 @@
                   </a>
                 </div>
 
-                <a
-                  href="{{ route('admin.kegiatan.edit', $item->id) }}"
+
+                  <a href="{{ route('admin.kegiatan.edit', $item->kegiatan_id) }}"
                   class="edit-kegiatan-btn"
                 >
                   Edit Kegiatan
                 </a>
 
                 <form
-                  action="{{ route('admin.kegiatan.destroy', $item->id) }}"
+                  action="{{ route('admin.kegiatan.destroy', $item->kegiatan_id) }}"
                   method="POST"
                   class="delete-kegiatan-form js-delete-form"
                   data-kegiatan="{{ $item->nama_kegiatan }}"
@@ -496,46 +538,39 @@
                     Hapus Kegiatan
                   </button>
                 </form>
+                {{-- Tombol Inject Moodle - di luar form hapus --}}
+@if($item->link_lms)
+  @php
+    $totalMenunggu  = \App\Models\PesertaKegiatan::where('kegiatan_id', $item->kegiatan_id)
+      ->where('status', 'menunggu')->count();
+    $totalDisetujui = \App\Models\PesertaKegiatan::where('kegiatan_id', $item->kegiatan_id)
+      ->where('status', 'disetujui')->count();
+  @endphp
 
-                @if($item->jenis_pelatihan === 'terbimbing')
-                  @php
-                    $totalPeserta = $item->kelas_count ?? $item->kelas()->count();
+  <div style="margin-top:.5rem;font-size:.8rem;color:#6b7280;">
+    <span>Disetujui: <strong>{{ $totalDisetujui }}</strong> | Menunggu: <strong>{{ $totalMenunggu }}</strong></span>
+  </div>
 
-                    $totalInjected = $item->kelas()
-                      ->whereNotNull('moodle_injected_at')
-                      ->count();
-                  @endphp
+  <form
+    action="{{ route('admin.kegiatan.moodle.injected', $item->kegiatan_id) }}"
+    method="POST"
+    style="margin-top:.5rem;"
+  >
+    @csrf
+    <button
+      type="submit"
+      class="inject-kegiatan-btn"
+      {{ $totalMenunggu === 0 ? 'disabled' : '' }}
+    >
+      {{ $totalMenunggu === 0 ? 'Semua Sudah Disetujui' : 'Setujui Peserta Menunggu (' . $totalMenunggu . ')' }}
+    </button>
+  </form>
+@else
+  <small style="color:#9ca3af;font-size:.78rem;display:block;margin-top:.5rem;">
+    Isi Link Moodle dulu untuk mengaktifkan persetujuan peserta.
+  </small>
+@endif
 
-                  <div class="moodle-inject-status">
-                    <span>
-                      Moodle:
-                      <strong>{{ $totalInjected }}/{{ $totalPeserta }}</strong>
-                      peserta aktif
-                    </span>
-                  </div>
-
-                  <form
-                    action="{{ route('admin.kegiatan.moodle.injected', $item->id) }}"
-                    method="POST"
-                    class="inject-kegiatan-form"
-                  >
-                    @csrf
-
-                    <button
-                      type="submit"
-                      class="inject-kegiatan-btn"
-                      {{ empty($item->moodle_course_url) ? 'disabled' : '' }}
-                    >
-                      Sudah di Inject
-                    </button>
-
-                    @if(empty($item->moodle_course_url))
-                      <small class="inject-help">
-                        Isi Link Course Moodle dulu.
-                      </small>
-                    @endif
-                  </form>
-                @endif
               </div>
             </article>
           @empty
@@ -657,47 +692,13 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    const jenisPelatihan = document.getElementById('jenis_pelatihan');
-    const perluPendaftaran = document.getElementById('perlu_pendaftaran');
-
-    if (!jenisPelatihan || !perluPendaftaran) {
-      return;
-    }
-
-    function syncJenisPelatihan() {
-      const pelatihan = jenisPelatihan.value;
-
-      /*
-        Jenis Pelatihan bebas dipilih untuk semua jenis kegiatan.
-        Tidak mengubah Jenis Kegiatan.
-      */
-
-      if (pelatihan === 'terbimbing') {
-        perluPendaftaran.value = '1';
-      }
-
-      if (pelatihan === 'mandiri') {
-        perluPendaftaran.value = '0';
-      }
-    }
-
-    jenisPelatihan.addEventListener('change', syncJenisPelatihan);
-
-    syncJenisPelatihan();
-  });
-</script>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
     const searchInput = document.getElementById('searchKegiatanInput');
     const resetButton = document.getElementById('resetSearchKegiatan');
     const emptySearch = document.getElementById('searchKegiatanEmpty');
     const kegiatanItems = document.querySelectorAll('.kegiatan-item');
 
     function filterKegiatan() {
-      if (!searchInput) {
-        return;
-      }
+      if (!searchInput) return;
 
       const keyword = searchInput.value.toLowerCase().trim();
       let visibleCount = 0;
@@ -718,9 +719,7 @@
       }
     }
 
-    if (searchInput) {
-      searchInput.addEventListener('input', filterKegiatan);
-    }
+    if (searchInput) searchInput.addEventListener('input', filterKegiatan);
 
     if (resetButton && searchInput) {
       resetButton.addEventListener('click', function () {
@@ -736,106 +735,60 @@
   document.addEventListener('DOMContentLoaded', function () {
     const saveForm = document.querySelector('.js-store-form');
     const openSaveButton = document.getElementById('openSaveModalButton');
-
     const saveModal = document.getElementById('saveConfirmModal');
     const confirmSaveButton = document.getElementById('confirmSaveButton');
     const closeSaveButtons = document.querySelectorAll('[data-close-save-modal]');
-
     const requiredPopup = document.getElementById('requiredPopup');
     const requiredPopupText = document.getElementById('requiredPopupText');
 
-    if (!saveForm || !openSaveButton || !saveModal || !confirmSaveButton) {
-      return;
-    }
+    if (!saveForm || !openSaveButton || !saveModal || !confirmSaveButton) return;
 
     function showRequiredPopup(message) {
-      if (!requiredPopup || !requiredPopupText) {
-        alert(message);
-        return;
-      }
-
+      if (!requiredPopup || !requiredPopupText) { alert(message); return; }
       requiredPopupText.textContent = message;
       requiredPopup.hidden = false;
-
       clearTimeout(window.requiredPopupTimer);
-
-      window.requiredPopupTimer = setTimeout(function () {
-        requiredPopup.hidden = true;
-      }, 3000);
+      window.requiredPopupTimer = setTimeout(function () { requiredPopup.hidden = true; }, 3000);
     }
 
     function clearFieldErrors() {
-      saveForm.querySelectorAll('.form-group.has-error').forEach(function (group) {
-        group.classList.remove('has-error');
-      });
+      saveForm.querySelectorAll('.form-group.has-error').forEach(function (g) { g.classList.remove('has-error'); });
     }
 
     function setFieldError(field) {
       const group = field.closest('.form-group');
-
-      if (group) {
-        group.classList.add('has-error');
-      }
+      if (group) group.classList.add('has-error');
     }
 
     function fieldEmpty(field) {
-      if (field.disabled) {
-        return false;
-      }
-
-      if (field.type === 'file') {
-        return false;
-      }
-
+      if (field.disabled || field.type === 'file') return false;
       return String(field.value || '').trim() === '';
     }
 
     function fieldLabel(field) {
       const group = field.closest('.form-group');
       const label = group ? group.querySelector('label') : null;
-
-      if (!label) {
-        return 'Field ini';
-      }
-
+      if (!label) return 'Field ini';
       return label.textContent.replace('*', '').trim();
     }
 
     function validateRequiredFields() {
       clearFieldErrors();
-
       const requiredFields = saveForm.querySelectorAll('[required]');
       let firstInvalidField = null;
 
       requiredFields.forEach(function (field) {
         if (fieldEmpty(field)) {
           setFieldError(field);
-
-          if (!firstInvalidField) {
-            firstInvalidField = field;
-          }
+          if (!firstInvalidField) firstInvalidField = field;
         }
       });
 
       if (firstInvalidField) {
-        const label = fieldLabel(firstInvalidField);
-        const message = label + ' wajib diisi.';
-
-        showRequiredPopup(message);
-
+        showRequiredPopup(fieldLabel(firstInvalidField) + ' wajib diisi.');
         const group = firstInvalidField.closest('.form-group');
-
-        if (group) {
-          group.scrollIntoView({
-            behavior: 'smooth',
-            block: 'center'
-          });
-        }
-
-        setTimeout(function () {
-          firstInvalidField.focus();
-        }, 350);
-
+        if (group) group.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(function () { firstInvalidField.focus(); }, 350);
         return false;
       }
 
@@ -845,7 +798,6 @@
     function openSaveModal() {
       saveModal.hidden = false;
       document.body.classList.add('modal-open');
-
       confirmSaveButton.disabled = false;
       confirmSaveButton.textContent = 'Ya, Simpan';
     }
@@ -853,58 +805,39 @@
     function closeSaveModal() {
       saveModal.hidden = true;
       document.body.classList.remove('modal-open');
-
       confirmSaveButton.disabled = false;
       confirmSaveButton.textContent = 'Ya, Simpan';
     }
 
     openSaveButton.addEventListener('click', function () {
-      const valid = validateRequiredFields();
-
-      if (!valid) {
-        return;
-      }
-
-      openSaveModal();
+      if (validateRequiredFields()) openSaveModal();
     });
 
     saveForm.querySelectorAll('input, select, textarea').forEach(function (field) {
       field.addEventListener('input', function () {
         if (!fieldEmpty(field)) {
           const group = field.closest('.form-group');
-
-          if (group) {
-            group.classList.remove('has-error');
-          }
+          if (group) group.classList.remove('has-error');
         }
       });
-
       field.addEventListener('change', function () {
         if (!fieldEmpty(field)) {
           const group = field.closest('.form-group');
-
-          if (group) {
-            group.classList.remove('has-error');
-          }
+          if (group) group.classList.remove('has-error');
         }
       });
     });
 
-    closeSaveButtons.forEach(function (button) {
-      button.addEventListener('click', closeSaveModal);
-    });
+    closeSaveButtons.forEach(function (btn) { btn.addEventListener('click', closeSaveModal); });
 
     confirmSaveButton.addEventListener('click', function () {
       confirmSaveButton.disabled = true;
       confirmSaveButton.textContent = 'Menyimpan...';
-
       saveForm.submit();
     });
 
-    document.addEventListener('keydown', function (event) {
-      if (event.key === 'Escape' && !saveModal.hidden) {
-        closeSaveModal();
-      }
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !saveModal.hidden) closeSaveModal();
     });
   });
 </script>
@@ -919,19 +852,13 @@
 
     let selectedForm = null;
 
-    if (!modal || !targetText || !confirmButton) {
-      return;
-    }
+    if (!modal || !targetText || !confirmButton) return;
 
     function openModal(form) {
       selectedForm = form;
-
-      const kegiatanName = form.getAttribute('data-kegiatan') || 'Kegiatan ini';
-      targetText.textContent = kegiatanName;
-
+      targetText.textContent = form.getAttribute('data-kegiatan') || 'Kegiatan ini';
       modal.hidden = false;
       document.body.classList.add('modal-open');
-
       confirmButton.disabled = false;
       confirmButton.textContent = 'Ya, Hapus';
     }
@@ -940,21 +867,15 @@
       modal.hidden = true;
       document.body.classList.remove('modal-open');
       selectedForm = null;
-
       confirmButton.disabled = false;
       confirmButton.textContent = 'Ya, Hapus';
     }
 
     deleteForms.forEach(function (form) {
-      form.addEventListener('submit', function (event) {
-        event.preventDefault();
-        openModal(form);
-      });
+      form.addEventListener('submit', function (e) { e.preventDefault(); openModal(form); });
     });
 
-    closeButtons.forEach(function (button) {
-      button.addEventListener('click', closeModal);
-    });
+    closeButtons.forEach(function (btn) { btn.addEventListener('click', closeModal); });
 
     confirmButton.addEventListener('click', function () {
       if (selectedForm) {
@@ -964,11 +885,39 @@
       }
     });
 
-    document.addEventListener('keydown', function (event) {
-      if (event.key === 'Escape' && !modal.hidden) {
-        closeModal();
-      }
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !modal.hidden) closeModal();
     });
+  });
+</script>
+
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const jenisKegiatan   = document.getElementById('jenis_kegiatan_id');
+    const isRegistration  = document.getElementById('is_registration_required');
+
+    if (!jenisKegiatan || !isRegistration) return;
+
+    function syncRegistration() {
+      const val = jenisKegiatan.value;
+
+      // jenis_kegiatan_id = 1 → Terbimbing → perlu daftar
+      if (val === '1') {
+        isRegistration.value = '1';
+      }
+
+      // jenis_kegiatan_id = 2 → Mandiri → tidak perlu daftar
+      if (val === '2') {
+        isRegistration.value = '0';
+      }
+    }
+
+    jenisKegiatan.addEventListener('change', syncRegistration);
+
+    // jalankan sekali saat load (untuk old value)
+    syncRegistration();
   });
 </script>
 

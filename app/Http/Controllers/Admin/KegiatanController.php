@@ -4,42 +4,75 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Kegiatan;
+use App\Models\TipeKegiatan;
+use App\Models\JenisKegiatan;
+use App\Models\Moda;
+use App\Models\Fasilitator;
+use App\Models\PesertaKegiatan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class KegiatanController extends Controller
 {
+    private function checkAdmin()
+    {
+        abort_if(!in_array(auth()->user()->role_id, [1, 2]), 403);
+    }
+
     public function index()
     {
-        abort_if(auth()->user()->role !== 'admin', 403);
+        $this->checkAdmin();
 
-        $kegiatan = Kegiatan::withCount('kelas')->latest()->get();
+        $kegiatan = Kegiatan::with(['tipeKegiatan', 'jenisKegiatan', 'moda', 'fasilitators'])
+            ->latest()
+            ->get();
 
-        return view('admin.kegiatan.index', compact('kegiatan'));
+        $tipeKegiatan  = TipeKegiatan::all();
+        $jenisKegiatan = JenisKegiatan::all();
+        $modaList      = Moda::all();
+        $fasilitators  = Fasilitator::all();
+
+        return view('admin.kegiatan.index', compact(
+            'kegiatan',
+            'tipeKegiatan',
+            'jenisKegiatan',
+            'modaList',
+            'fasilitators'
+        ));
     }
 
     public function edit(Kegiatan $kegiatan)
     {
-        abort_if(auth()->user()->role !== 'admin', 403);
+        $this->checkAdmin();
 
-        return view('admin.kegiatan.edit', compact('kegiatan'));
+        $kegiatan->load(['tipeKegiatan', 'jenisKegiatan', 'moda', 'fasilitators']);
+
+        $tipeKegiatan  = TipeKegiatan::all();
+        $jenisKegiatan = JenisKegiatan::all();
+        $modaList      = Moda::all();
+        $fasilitators  = Fasilitator::all();
+
+        return view('admin.kegiatan.edit', compact(
+            'kegiatan',
+            'tipeKegiatan',
+            'jenisKegiatan',
+            'modaList',
+            'fasilitators'
+        ));
     }
 
     public function store(Request $request)
     {
-        abort_if(auth()->user()->role !== 'admin', 403);
+        $this->checkAdmin();
 
         $validated = $this->validateKegiatan($request);
-        $validated = $this->normalizeKegiatanPayload($validated, $request);
 
         $slugBase = Str::slug($validated['nama_kegiatan']);
+        $slugBase = $slugBase ?: 'kegiatan';
 
-        if ($slugBase === '') {
-            $slugBase = 'kegiatan';
-        }
-
-        $slug = $slugBase;
+        $slug    = $slugBase;
         $counter = 1;
 
         while (Kegiatan::where('slug', $slug)->exists()) {
@@ -48,13 +81,23 @@ class KegiatanController extends Controller
         }
 
         if ($request->hasFile('flayer')) {
-            $validated['flayer'] = $request->file('flayer')->store('flayer-kegiatan', 'public');
+            $validated['flayer'] = $request->file('flayer')
+                ->store('flayer-kegiatan', 'public');
         }
 
-        $validated['slug'] = $slug;
+        $validated['slug']             = $slug;
         $validated['link_pendaftaran'] = route('kegiatan.daftar', $slug);
 
-        Kegiatan::create($validated);
+        // Set default status_url jika tidak diisi
+        if (empty($validated['status_url'])) {
+            $validated['status_url'] = 'active';
+        }
+
+        $kegiatan = Kegiatan::create($validated);
+
+        if ($request->filled('fasilitator_ids')) {
+            $this->syncFasilitators($kegiatan->kegiatan_id, $request->fasilitator_ids);
+        }
 
         return redirect()
             ->route('admin.kegiatan.index')
@@ -63,30 +106,26 @@ class KegiatanController extends Controller
 
     public function update(Request $request, Kegiatan $kegiatan)
     {
-        abort_if(auth()->user()->role !== 'admin', 403);
+        $this->checkAdmin();
 
         $validated = $this->validateKegiatan($request, true, $kegiatan);
-        $validated = $this->normalizeKegiatanPayload($validated, $request);
 
         $slugBase = Str::slug($validated['nama_kegiatan']);
+        $slugBase = $slugBase ?: 'kegiatan-' . $kegiatan->kegiatan_id;
 
-        if ($slugBase === '') {
-            $slugBase = 'kegiatan-' . $kegiatan->id;
-        }
-
-        $slug = $slugBase;
+        $slug    = $slugBase;
         $counter = 1;
 
         while (
             Kegiatan::where('slug', $slug)
-                ->where('id', '!=', $kegiatan->id)
-                ->exists()
+            ->where('kegiatan_id', '!=', $kegiatan->kegiatan_id)
+            ->exists()
         ) {
             $slug = $slugBase . '-' . $counter;
             $counter++;
         }
 
-        $validated['slug'] = $slug;
+        $validated['slug']             = $slug;
         $validated['link_pendaftaran'] = route('kegiatan.daftar', $slug);
 
         if ($request->hasFile('flayer')) {
@@ -94,56 +133,117 @@ class KegiatanController extends Controller
                 Storage::disk('public')->delete($kegiatan->flayer);
             }
 
-            $validated['flayer'] = $request->file('flayer')->store('flayer-kegiatan', 'public');
+            $validated['flayer'] = $request->file('flayer')
+                ->store('flayer-kegiatan', 'public');
         }
 
         $kegiatan->update($validated);
+
+        if ($request->has('fasilitator_ids')) {
+            $this->syncFasilitators($kegiatan->kegiatan_id, $request->fasilitator_ids ?? []);
+        }
 
         return redirect()
             ->route('admin.kegiatan.index')
             ->with('success', 'Kegiatan berhasil diperbarui.');
     }
 
+    // Method baru untuk update status URL (Active/Inactive)
+    public function updateStatus(Request $request, Kegiatan $kegiatan)
+    {
+        $this->checkAdmin();
+
+        $request->validate([
+            'status_url' => 'required|in:active,inactive',
+        ]);
+
+        $kegiatan->update([
+            'status_url' => $request->status_url,
+        ]);
+
+        $statusText = $request->status_url === 'active' ? 'diaktifkan' : 'dinonaktifkan';
+
+        return redirect()
+            ->route('admin.kegiatan.index')
+            ->with('success', "Status URL kegiatan berhasil {$statusText}.");
+    }
+
+    // Method baru untuk update token kegiatan
+    public function updateToken(Request $request, Kegiatan $kegiatan)
+    {
+        $this->checkAdmin();
+
+        $request->validate([
+            'token_kegiatan' => 'nullable|string|max:10',
+        ]);
+
+        $kegiatan->update([
+            'token_kegiatan' => $request->token_kegiatan,
+        ]);
+
+        return redirect()
+            ->route('admin.kegiatan.index')
+            ->with('success', 'Token kegiatan berhasil diperbarui.');
+    }
+
     public function markMoodleInjected(Kegiatan $kegiatan)
     {
-        abort_if(auth()->user()->role !== 'admin', 403);
+        $this->checkAdmin();
 
-        if ($kegiatan->jenis_pelatihan !== 'terbimbing') {
+        if (!$kegiatan->link_lms) {
             return back()->withErrors([
-                'inject' => 'Inject Moodle hanya untuk kegiatan dengan jenis pelatihan terbimbing.',
+                'link_lms' => 'Link LMS/Moodle belum diisi.',
             ]);
         }
 
-        if (!$kegiatan->moodle_course_url) {
-            return back()->withErrors([
-                'moodle_course_url' => 'Link course Moodle belum diisi.',
-            ]);
-        }
-
-        $jumlah = $kegiatan->kelas()
-            ->whereNull('moodle_injected_at')
+        $jumlah = PesertaKegiatan::where('kegiatan_id', $kegiatan->kegiatan_id)
+            ->where('status', 'menunggu')
             ->update([
-                'status_pendaftaran' => 'disetujui',
-                'moodle_injected_at' => now(),
-                'moodle_injected_by' => auth()->id(),
+                'status' => 'disetujui',
             ]);
 
-        return back()->with('success', 'Berhasil mengaktifkan link Moodle untuk ' . $jumlah . ' peserta.');
+        return back()->with('success', 'Berhasil menyetujui ' . $jumlah . ' peserta.');
     }
 
     public function destroy(Kegiatan $kegiatan)
     {
-        abort_if(auth()->user()->role !== 'admin', 403);
+        $this->checkAdmin();
 
         if ($kegiatan->flayer && Storage::disk('public')->exists($kegiatan->flayer)) {
             Storage::disk('public')->delete($kegiatan->flayer);
         }
+
+        // Hapus fasilitator mapping
+        DB::table('fasilitator_mapping')
+            ->where('kegiatan_id', $kegiatan->kegiatan_id)
+            ->delete();
+
+        // Hapus peserta_kegiatan yang terkait
+        PesertaKegiatan::where('kegiatan_id', $kegiatan->kegiatan_id)->delete();
 
         $kegiatan->delete();
 
         return redirect()
             ->route('admin.kegiatan.index')
             ->with('success', 'Kegiatan berhasil dihapus.');
+    }
+
+    // ─── Private Helpers ────────────────────────────────────────────────────────
+
+    private function syncFasilitators(int $kegiatanId, array $fasilitatorIds): void
+    {
+        DB::table('fasilitator_mapping')
+            ->where('kegiatan_id', $kegiatanId)
+            ->delete();
+
+        $rows = array_map(fn($id) => [
+            'kegiatan_id'    => $kegiatanId,
+            'fasilitator_id' => $id,
+        ], $fasilitatorIds);
+
+        if (!empty($rows)) {
+            DB::table('fasilitator_mapping')->insert($rows);
+        }
     }
 
     private function validateKegiatan(Request $request, bool $isUpdate = false, ?Kegiatan $kegiatan = null): array
@@ -153,21 +253,23 @@ class KegiatanController extends Controller
             : 'required';
 
         return $request->validate([
-            'jenis_kegiatan' => 'required|in:webinar,pelatihan,konsultasi',
-            'moda' => 'required|in:luring,daring,hybrid',
-            'jenis_pelatihan' => 'nullable|in:terbimbing,mandiri',
-            'perlu_pendaftaran' => 'nullable|boolean',
-
-            'fasil' => 'required|string|max:255',
-            'kuota' => 'required|integer|min:1',
-            'waktu_pelaksanaan' => 'required|date',
-            'nama_kegiatan' => 'required|string|max:255',
-            'deskripsi' => 'required|string',
-
-            'link_zoom' => 'nullable|string|max:255',
-            'moodle_course_url' => 'nullable|string|max:255',
-
-            'flayer' => [
+            'tipe_kegiatan_id'  => 'required|integer|exists:tipe_kegiatan,tipe_kegiatan_id',
+            'jenis_kegiatan_id' => 'nullable|integer|exists:jenis_kegiatan,jenis_kegiatan_id',
+            'moda_id'           => 'required|integer|exists:moda,moda_id',
+            'kuota'             => 'required|integer|min:1',
+            'is_registration_required' => 'nullable|boolean',
+            'waktu_pelaksanaan' => 'nullable|date',
+            'start_date'        => 'nullable|date',
+            'end_date'          => 'nullable|date|after_or_equal:start_date',
+            'nama_kegiatan'     => 'required|string|max:255',
+            'deskripsi'         => 'required|string',
+            'link_zoom'         => 'nullable|string|max:500',
+            'link_lms'          => 'nullable|string|max:255',
+            'token_kegiatan'    => 'nullable|string|max:10', // Token manual input
+            'status_url'        => 'nullable|in:active,inactive', // Status URL
+            'fasilitator_ids'   => 'nullable|array',
+            'fasilitator_ids.*' => 'integer|exists:fasilitator,fasilitator_id',
+            'flayer'            => [
                 $flayerRule,
                 'image',
                 'mimes:jpg,jpeg,png,webp',
@@ -175,20 +277,5 @@ class KegiatanController extends Controller
                 'dimensions:width=1080,height=1350',
             ],
         ]);
-    }
-
-    private function normalizeKegiatanPayload(array $validated, Request $request): array
-    {
-        $validated['perlu_pendaftaran'] = $request->boolean('perlu_pendaftaran');
-
-        if (($validated['jenis_pelatihan'] ?? null) === 'terbimbing') {
-            $validated['perlu_pendaftaran'] = true;
-        }
-
-        if (($validated['jenis_pelatihan'] ?? null) === 'mandiri') {
-            $validated['perlu_pendaftaran'] = false;
-        }
-
-        return $validated;
     }
 }

@@ -8,47 +8,18 @@ use App\Http\Controllers\Admin\KegiatanController;
 use App\Http\Controllers\PublicDashboardController;
 use App\Http\Controllers\PendaftaranKegiatanController;
 use App\Http\Controllers\KelasController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ApiPtkController;
+use App\Http\Controllers\AuthKegiatanController;
+
 
 Route::get('/', [PublicDashboardController::class, 'index']);
 Route::get('/dashboard', [PublicDashboardController::class, 'index'])->name('dashboard');
 
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('login');
+Route::get('/login', [AuthController::class, 'index'])->name('login');
+Route::post('/login', [AuthController::class, 'authenticate'])->name('login.process');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::post('/login', function (Request $request) {
-    $credentials = $request->validate([
-        'email' => ['required', 'email'],
-        'password' => ['required'],
-    ]);
-
-    if (Auth::attempt($credentials, $request->boolean('remember'))) {
-        $request->session()->regenerate();
-
-        $user = Auth::user();
-
-        if ($user->role === 'admin') {
-            return redirect()->intended('/admin/dashboard');
-        }
-
-        return redirect()->intended('/kelas');
-    }
-
-    return back()
-        ->withErrors([
-            'email' => 'Email atau password salah.',
-        ])
-        ->onlyInput('email');
-})->name('login.process');
-
-Route::post('/logout', function (Request $request) {
-    Auth::logout();
-
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
-
-    return redirect('/dashboard');
-})->name('logout');
 
 Route::get('/daftar-kegiatan/{slug}', [PendaftaranKegiatanController::class, 'create'])
     ->name('kegiatan.daftar');
@@ -56,12 +27,29 @@ Route::get('/daftar-kegiatan/{slug}', [PendaftaranKegiatanController::class, 'cr
 Route::post('/daftar-kegiatan/{slug}', [PendaftaranKegiatanController::class, 'store'])
     ->name('kegiatan.daftar.store');
 
-Route::get('/pendaftaran-berhasil/{kelas}', [PendaftaranKegiatanController::class, 'success'])
+// Route::get('/pendaftaran-berhasil/{kelas}', [PendaftaranKegiatanController::class, 'success'])
+//     ->name('kegiatan.daftar.success');
+Route::get('/{slug}/pendaftaran-berhasil/{pesertaKegiatan}', [PendaftaranKegiatanController::class, 'success'])
     ->name('kegiatan.daftar.success');
 
-Route::get('/kelas', [KelasController::class, 'index'])
-    ->middleware('auth')
-    ->name('kelas.index');
+Route::get('/pendaftaran/cari-sekolah', [PendaftaranKegiatanController::class, 'searchSekolah'])
+    ->name('pendaftaran.cari.sekolah');
+Route::get('/pendaftaran/ptk/cek-nip', [ApiPtkController::class, 'cekNip'])->name('pendaftaran.ptk.cek-nip');
+Route::get('/pendaftaran/ptk/cek-nik', [ApiPtkController::class, 'cekNik'])->name('pendaftaran.ptk.cek-nik');
+
+
+// ============ ROUTE KEGIATAN (LOGIN PESERTA) ============
+// Penting: Semua route kegiatan harus memiliki prefix yang jelas, misal /kegiatan/
+// Agar tidak bentrok dengan route admin
+Route::prefix('kegiatan')->group(function () {
+    Route::get('/{slug}/login', [AuthKegiatanController::class, 'showLoginForm'])->name('kegiatan.login.form');
+    Route::post('/{slug}/login', [AuthKegiatanController::class, 'login'])->name('kegiatan.login');
+    Route::get('/{slug}/dashboard', [AuthKegiatanController::class, 'dashboard'])->name('kegiatan.dashboard');
+    Route::post('/{slug}/logout', [AuthKegiatanController::class, 'logout'])->name('kegiatan.logout');
+    Route::get('/{slug?}/kelas', [KelasController::class, 'index'])
+        ->name('kegiatan.kelas.index')
+        ->where('slug', '.*');
+});
 
 Route::get('/sertifikat', function () {
     return 'Halaman Sertifikat Publik';
@@ -79,11 +67,21 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/kegiatan', [KegiatanController::class, 'store'])
         ->name('admin.kegiatan.store');
 
+    Route::post('/admin/fasilitator', [KegiatanController::class, 'storeFasilitator'])
+        ->name('admin.fasilitator.store');
+
     Route::get('/admin/kegiatan/{kegiatan}/edit', [KegiatanController::class, 'edit'])
         ->name('admin.kegiatan.edit');
 
     Route::put('/admin/kegiatan/{kegiatan}', [KegiatanController::class, 'update'])
         ->name('admin.kegiatan.update');
+
+    Route::patch('/admin/kegiatan/{kegiatan}/status', [KegiatanController::class, 'updateStatus'])
+        ->name('admin.kegiatan.update.status');
+
+    // Route untuk update token kegiatan
+    Route::patch('/admin/kegiatan/{kegiatan}/token', [KegiatanController::class, 'updateToken'])
+        ->name('admin.kegiatan.update.token');
 
     Route::post('/admin/kegiatan/{kegiatan}/moodle-injected', [KegiatanController::class, 'markMoodleInjected'])
         ->name('admin.kegiatan.moodle.injected');

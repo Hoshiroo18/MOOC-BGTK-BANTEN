@@ -8,25 +8,12 @@
 
 @section('content')
 
-@php
-  $kegiatan = $kelas->kegiatan;
-
-  $isTerbimbing = $kegiatan
-    && $kegiatan->jenis_kegiatan === 'pelatihan'
-    && $kegiatan->jenis_pelatihan === 'terbimbing';
-@endphp
-
 <section class="pendaftaran-page">
-
   <div class="pendaftaran-hero">
     <div class="container pendaftaran-hero-inner">
       <span class="student-eyebrow">Pendaftaran Berhasil</span>
-
       <h1>Data kamu berhasil dikirim.</h1>
-
-      <p>
-        Berikut petunjuk untuk mengikuti kegiatan yang sudah kamu pilih.
-      </p>
+      <p>Berikut petunjuk untuk mengikuti kegiatan yang sudah kamu pilih.</p>
     </div>
   </div>
 
@@ -34,9 +21,9 @@
     <div class="success-card">
       <div class="success-icon">✓</div>
 
-      <h2>{{ $kegiatan->nama_kegiatan ?? 'Kegiatan MOOC' }}</h2>
+      <h2>{{ optional($pesertaKegiatan->kegiatan)->nama_kegiatan ?? 'Kegiatan MOOC' }}</h2>
 
-      @if($isTerbimbing)
+      @if($pesertaKegiatan->status_pendaftaran === 'menunggu')
         <p>
           Pendaftaran kamu sudah masuk. Untuk pelatihan terbimbing,
           admin akan menginput data peserta ke Moodle terlebih dahulu.
@@ -64,21 +51,27 @@
       @endif
 
       <div class="login-info-box">
-        <strong>Akun Peserta</strong>
-
-        <p>
-          Jika email ini belum pernah terdaftar, akun peserta otomatis dibuat.
-          Gunakan email yang kamu isi dan NIK sebagai password awal.
-        </p>
+        <strong>Informasi Peserta</strong>
+        <p>Berikut data yang tersimpan dari pendaftaran kamu.</p>
 
         <div class="account-hint">
-          <span>Email login:</span>
-          <strong>{{ $kelas->email }}</strong>
+          <span>Nama:</span>
+          <strong>{{ optional($pesertaKegiatan->peserta)->nama ?? '-' }}</strong>
         </div>
 
         <div class="account-hint">
-          <span>Password awal:</span>
-          <strong>NIK yang kamu isi saat pendaftaran</strong>
+          <span>Email:</span>
+          <strong>{{ optional($pesertaKegiatan->peserta)->email ?? '-' }}</strong>
+        </div>
+
+        <div class="account-hint">
+          <span>Instansi:</span>
+          <strong>{{ optional($pesertaKegiatan->peserta)->Instansi ?? '-' }}</strong>
+        </div>
+
+        <div class="account-hint">
+          <span>Terdaftar pada:</span>
+          <strong>{{ \Carbon\Carbon::parse($pesertaKegiatan->terdaftar_at)->format('d M Y, H:i') }}</strong>
         </div>
       </div>
 
@@ -87,13 +80,12 @@
           Kembali ke Dashboard
         </a>
 
-        <a href="{{ route('login') }}" class="success-outline-btn">
-          Login Peserta
-        </a>
+    <a href="{{ route('kegiatan.login.form', $pesertaKegiatan->kegiatan->slug) }}" class="success-outline-btn">
+    Login
+</a>
       </div>
     </div>
   </div>
-
 </section>
 
 @endsection

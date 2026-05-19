@@ -1,21 +1,21 @@
 @php
   $user = Auth::user();
+  $kegiatanUser = session('auth_peserta'); // Session dari AuthKegiatanController
 
-  $adminEmails = [
-    'yusup.ardabili@kemendikdasmen.go.id',
-  ];
+  $isAdmin = $user && in_array($user->role_id, [1, 2]); // 1=Administrator, 2=Supervisor
+  $isKegiatanLogin = !empty($kegiatanUser); // Check kegiatan login via session
 
-  $isAdmin = $user && (
-    ($user->role ?? null) === 'admin' ||
-    in_array($user->email, $adminEmails, true)
-  );
-
-  $brandUrl = $isAdmin
-    ? route('admin.dashboard')
-    : url('/dashboard');
+  // Tentukan brand URL berdasarkan jenis login
+  if ($isKegiatanLogin) {
+    $brandUrl = route('kegiatan.dashboard', $kegiatanUser['kegiatan_slug']);
+  } elseif ($isAdmin) {
+    $brandUrl = route('admin.dashboard');
+  } else {
+    $brandUrl = url('/dashboard');
+  }
 @endphp
 
-<header class="site-header {{ Auth::check() ? 'header-auth' : 'header-guest' }}">
+<header class="site-header {{ Auth::check() || $isKegiatanLogin ? 'header-auth' : 'header-guest' }}">
   <div class="container header-inner">
 
     <a href="{{ $brandUrl }}" class="brand">
@@ -41,28 +41,80 @@
     </button>
 
     <nav class="nav-menu" id="mainNavMenu">
-      @auth
-        @if($isAdmin)
-          <a href="{{ route('admin.dashboard') }}">Dashboard Admin</a>
-          <a href="{{ route('admin.kegiatan.index') }}">Kegiatan</a>
-          <a href="{{ route('admin.users.index') }}">Kelola User</a>
-          <a href="{{ url('/dashboard') }}">Lihat Web</a>
-        @else
-          <a href="{{ url('/dashboard') }}">Dashboard</a>
-          <a href="{{ route('kelas.index') }}">Kelas Saya</a>
-          <a href="{{ route('sertifikat.index') }}">Sertifikat</a>
-          <a href="{{ route('bantuan.index') }}">Bantuan</a>
-        @endif
-      @else
+      {{-- ========== KEGIATAN LOGIN (Session-based) ========== --}}
+      @if($isKegiatanLogin)
+        <a href="{{ route('kegiatan.dashboard', $kegiatanUser['kegiatan_slug']) }}">
+          Dashboard Kegiatan
+        </a>
         <a href="{{ url('/dashboard') }}">Dashboard</a>
-        <a href="{{ route('kelas.index') }}">Kelas</a>
+         <a href="{{ route('kegiatan.kelas.index', ['slug' => $kegiatanUser['kegiatan_slug']]) }}">
+        Kelas Saya
+         </a>
         <a href="{{ route('sertifikat.index') }}">Sertifikat</a>
         <a href="{{ route('bantuan.index') }}">Bantuan</a>
-      @endauth
+        {{-- <span class="nav-separator">•</span>
+        <span class="nav-info-text">
+          📚 {{ $kegiatanUser['kegiatan_nama'] }}
+        </span> --}}
+
+      {{-- ========== ADMIN LOGIN ========== --}}
+      @elseif($isAdmin)
+        <a href="{{ route('admin.dashboard') }}">Dashboard Admin</a>
+        <a href="{{ route('admin.kegiatan.index') }}">Kegiatan</a>
+        <a href="{{ route('admin.users.index') }}">Kelola User</a>
+        <a href="{{ url('/dashboard') }}">Lihat Web</a>
+
+      {{-- ========== REGULAR USER LOGIN ========== --}}
+      @elseif(Auth::check())
+        <a href="{{ url('/dashboard') }}">Dashboard</a>
+         <a href="{{ route('kegiatan.kelas.index', ['slug' => $kegiatanUser['kegiatan_slug']]) }}">
+        Kelas Saya
+         </a>
+        <a href="{{ route('sertifikat.index') }}">Sertifikat</a>
+        <a href="{{ route('bantuan.index') }}">Bantuan</a>
+
+      {{-- ========== GUEST (Belum Login) ========== --}}
+      @else
+        <a href="{{ url('/dashboard') }}">Dashboard</a>
+        {{-- <a href="#">Kelas</a> --}}
+        <a href="{{ route('sertifikat.index') }}">Sertifikat</a>
+        <a href="{{ route('bantuan.index') }}">Bantuan</a>
+      @endif
     </nav>
 
     <div class="header-actions">
-      @auth
+      {{-- ========== KEGIATAN LOGIN (Session-based) ========== --}}
+      @if($isKegiatanLogin)
+        <details class="user-dropdown">
+          <summary class="baduy-user-trigger">
+            <span class="user-trigger-name">
+               {{ \Illuminate\Support\Str::limit($kegiatanUser['nama'], 20) }}
+            </span>
+
+            <span class="user-trigger-arrow">▾</span>
+          </summary>
+
+          <div class="user-dropdown-menu">
+            <div class="user-dropdown-info">
+              <strong>{{ $kegiatanUser['nama'] }}</strong>
+              <small>{{ $kegiatanUser['email'] }}</small>
+              <small style="display: block; margin-top: 5px; color: #0d56b6; font-weight: 600;">
+                📚 {{ $kegiatanUser['kegiatan_nama'] }}
+              </small>
+            </div>
+
+            <form action="{{ route('kegiatan.logout', ['slug' => $kegiatanUser['kegiatan_slug']]) }}" method="POST">
+              @csrf
+
+              <button type="submit" class="dropdown-logout-btn">
+                Logout Kegiatan
+              </button>
+            </form>
+          </div>
+        </details>
+
+      {{-- ========== ADMIN/REGULAR USER LOGIN ========== --}}
+      @elseif(Auth::check())
         <details class="user-dropdown">
           <summary class="baduy-user-trigger">
             <span class="user-trigger-name">
@@ -74,8 +126,13 @@
 
           <div class="user-dropdown-menu">
             <div class="user-dropdown-info">
-              <strong>{{ $user->name ?: 'User' }}</strong>
+              <strong>{{ $user->nama ?: 'User' }}</strong>
               <small>{{ $user->email }}</small>
+              @if($isAdmin)
+                <small style="display: block; margin-top: 5px; color: #0d56b6; font-weight: 600;">
+                  Admin
+                </small>
+              @endif
             </div>
 
             <form action="{{ route('logout') }}" method="POST">
@@ -87,15 +144,43 @@
             </form>
           </div>
         </details>
+
+      {{-- ========== GUEST (Belum Login) ========== --}}
       @else
         <a href="{{ route('login') }}" class="login-btn baduy-user-trigger">
           Login
         </a>
-      @endauth
+      @endif
     </div>
 
   </div>
 </header>
+
+<style>
+  /* Support untuk nav-info-text di kegiatan login */
+  .nav-info-text {
+    display: inline-block;
+    padding: 0 10px;
+    color: #666;
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+
+  .nav-separator {
+    color: #ddd;
+    margin: 0 5px;
+  }
+
+  @media (max-width: 768px) {
+    .nav-info-text {
+      display: none;
+    }
+
+    .nav-separator {
+      display: none;
+    }
+  }
+</style>
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {

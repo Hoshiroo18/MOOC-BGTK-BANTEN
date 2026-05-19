@@ -404,9 +404,11 @@
           Buka Dashboard
         </a>
 
-        <a href="{{ route('kelas.index') }}" class="help-white-btn">
-          Kelas Saya
-        </a>
+        @if(!empty($kegiatanUser['kegiatan_slug']))
+            <a href="{{ route('kegiatan.kelas.index', ['slug' => $kegiatanUser['kegiatan_slug']]) }}" class="help-white-btn">
+            Kelas Saya
+            </a>
+        @endif
       </div>
     </div>
   </section>
