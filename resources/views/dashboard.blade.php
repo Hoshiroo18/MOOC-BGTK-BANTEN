@@ -323,8 +323,8 @@
             </small>
             <br>
          <a href="#" id="modalLoginLink"
-            style="margin-top:.4rem;padding:.5rem 1.2rem;border:2px solid #16a34a;border-radius:8px;
-                    background:transparent;color:#16a34a;font-size:.85rem;font-weight:600;cursor:pointer;
+            style="margin-top:.4rem;padding:.5rem 1.2rem;border:2px solid #074a9a ;border-radius:8px;
+                    background:transparent;color:#074a9a; font-size:.85rem;font-weight:600;cursor:pointer;
                     display:inline-block;text-decoration:none;">
             Login Kegiatan
             </a>

@@ -123,11 +123,14 @@
       </div>
     @endif
 
+    {{-- DIBUAT COMMENT: Alert error merah bawaan dimatikan, diganti popup SweetAlert di paling bawah --}}
+    {{-- 
     @if($errors->any())
       <div class="alert-error">
         {{ $errors->first() }}
       </div>
     @endif
+    --}}
 
     <div class="kegiatan-grid">
 
@@ -266,21 +269,6 @@
 </div>
 
       <div class="form-row">
-  {{-- <div class="form-group">
-    <label for="waktu_pelaksanaan">
-      Waktu Pelaksanaan <span class="required-mark">*</span>
-    </label>
-    <input
-      type="text"
-      id="waktu_pelaksanaan"
-      name="waktu_pelaksanaan"
-      class="datetime-picker"
-      value="{{ old('waktu_pelaksanaan') }}"
-      placeholder="Pilih tanggal dan jam kegiatan"
-      required
-    >
-  </div> --}}
-
   <div class="form-group">
     <label for="start_date">
       Tanggal Mulai
@@ -538,7 +526,7 @@
                     Hapus Kegiatan
                   </button>
                 </form>
-                {{-- Tombol Inject Moodle - di luar form hapus --}}
+                
 @if($item->link_lms)
   @php
     $totalMenunggu  = \App\Models\PesertaKegiatan::where('kegiatan_id', $item->kegiatan_id)
@@ -891,8 +879,6 @@
   });
 </script>
 
-
-
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const jenisKegiatan   = document.getElementById('jenis_kegiatan_id');
@@ -918,6 +904,34 @@
 
     // jalankan sekali saat load (untuk old value)
     syncRegistration();
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    @if($errors->any())
+      // Menggunakan json untuk menghindari syntax error akibat karakter petik pada pesan error
+      var errorMessages = @json($errors->all());
+      
+      Swal.fire({
+        icon: 'error',
+        title: 'Gagal Menyimpan!',
+        html: errorMessages.join('<br>'),
+        confirmButtonColor: '#d33',
+        confirmButtonText: 'Tutup'
+      });
+    @endif
+
+    @if(session('error'))
+      Swal.fire({
+        icon: 'error',
+        title: 'Gagal!',
+        text: '{{ session('error') }}',
+        confirmButtonColor: '#d33',
+        confirmButtonText: 'Tutup'
+      });
+    @endif
   });
 </script>
 

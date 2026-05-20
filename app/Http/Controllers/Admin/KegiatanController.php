@@ -276,6 +276,13 @@ class KegiatanController extends Controller
                 'max:5120',
                 'dimensions:width=1080,height=1350',
             ],
+        ], [
+            // PENAMBAHAN PESAN ERROR MANUAL
+            'flayer.dimensions' => 'Ukuran gambar flayer tidak sesuai. mohon unggah gambar dengan ukuran 1080x1350.',
+            'flayer.required'   => 'Flayer wajib diunggah.',
+            'flayer.image'      => 'File yang diunggah harus berupa gambar.',
+            'flayer.mimes'      => 'Format gambar harus jpg, jpeg, png, atau webp.',
+            'flayer.max'        => 'Ukuran file gambar maksimal 5MB.'
         ]);
     }
 }

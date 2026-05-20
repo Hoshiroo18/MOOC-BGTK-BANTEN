@@ -148,7 +148,7 @@
       {{-- ========== GUEST (Belum Login) ========== --}}
       @else
         <a href="{{ route('login') }}" class="login-btn baduy-user-trigger">
-          Login
+          Login Admin
         </a>
       @endif
     </div>
